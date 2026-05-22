@@ -75,7 +75,7 @@ This opens an interactive menu with the following options:
 
 eazy-git supports multiple languages. Currently available:
 
-- 🇬🇧 English (`en`)
+- 🇺🇸 English (`en`)
 - 🇪🇸 Spanish (`es`)
 
 Change the language via the configuration menu:
