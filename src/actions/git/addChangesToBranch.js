@@ -168,7 +168,7 @@ const addChangesToBranch = async () => {
     }
   }
 
-  // --- Paso 4: Sugerir mensaje de commit con Claude ---
+  // --- Paso 4: Sugerir mensaje de commit con IA ---
   const diff = execSync("git diff --cached", { encoding: "utf-8" });
 
   const prompt = `Analiza el siguiente git diff y sugiere UN SOLO mensaje de commit en formato convencional.
@@ -184,11 +184,27 @@ Reglas:
 Git diff:
 ${diff}`;
 
-  s.start("Generando sugerencia de commit con Claude...");
-  const claudeResult = await new Promise((resolve) => {
+  const aiChoice = await select({
+    message: "Con que IA quieres generar la sugerencia de commit?",
+    options: [
+      { value: "claude", label: "Claude" },
+      { value: "opencode", label: "Opencode" },
+    ],
+  });
+  handleUserCancellation(aiChoice);
+
+  const aiConfig = {
+    claude: { binary: "claude", args: ["-p", prompt], label: "Claude" },
+    opencode: { binary: "opencode", args: ["run", prompt], label: "Opencode" },
+  };
+
+  const { binary, args, label } = aiConfig[aiChoice];
+
+  s.start(`Generando sugerencia de commit con ${label}...`);
+  const aiResult = await new Promise((resolve) => {
     let stdout = "";
     let stderr = "";
-    const proc = spawn("claude", ["-p", prompt], {
+    const proc = spawn(binary, args, {
       stdio: ["ignore", "pipe", "pipe"],
     });
     proc.stdout.on("data", (chunk) => {
@@ -208,9 +224,9 @@ ${diff}`;
 
   let commitMsg;
 
-  if (claudeResult.error || claudeResult.status !== 0) {
+  if (aiResult.error || aiResult.status !== 0) {
     log.warn(
-      "No se pudo obtener sugerencia de Claude. Escribe el mensaje manualmente.",
+      `No se pudo obtener sugerencia de ${label}. Escribe el mensaje manualmente.`,
     );
     const customMsg = await text({
       message: "Escribe el mensaje de commit:",
@@ -221,8 +237,8 @@ ${diff}`;
     handleUserCancellation(customMsg);
     commitMsg = customMsg;
   } else {
-    const suggestion = claudeResult.stdout.trim();
-    note(suggestion, "Sugerencia de Claude");
+    const suggestion = aiResult.stdout.trim();
+    note(suggestion, `Sugerencia de ${label}`);
 
     const useIt = await select({
       message: "Este mensaje de commit te parece bien?",
