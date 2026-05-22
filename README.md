@@ -52,22 +52,22 @@ This opens an interactive menu with the following options:
 
 ## 🧰 Available Commands
 
-| Command    | Description                                                                 |
-| ---------- | --------------------------------------------------------------------------- |
-| `eazy-git`, `eg` | Launch the interactive CLI to create and manage Git branches         |
-| `pull`     | Pull latest changes from remote repository (`git pull origin HEAD`)         |
-| `push`     | Push local changes to remote repository (`git push origin HEAD`)            |
-| `removelast` | Undo last commit while preserving changes in working directory (asks for confirmation) |
-| `mergewith`  | Merge current branch with another remote branch (defaults to `origin/develop`) |
-| `commit`   | Stage all changes and commit with a provided message                        |
-| `back`     | Switch back to the previously checked out branch                            |
-| `checkout` | Switch to a specified branch or return to the previous branch               |
-| `log`      | Display formatted commit history with details                               |
-| `run`      | Start development server (`npm run dev`)                                    |
-| `runrun`   | Clean development server restart (removes `.next` folder and runs `npm run dev`) |
-| `i`        | Install project dependencies using configured auth token                    |
-| `eg config` | Open configuration menu (language, default branch, AI provider)            |
-| `-v`, `--version` | Display installed package version                                    |
+| Command           | Description                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                           |
+| `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                    |
+| `push`            | Push local changes to remote repository (`git push origin HEAD`)                       |
+| `removelast`      | Undo last commit while preserving changes in working directory (asks for confirmation) |
+| `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)         |
+| `commit`          | Stage all changes and commit with a provided message                                   |
+| `back`            | Switch back to the previously checked out branch                                       |
+| `checkout`        | Switch to a specified branch or return to the previous branch                          |
+| `log`             | Display formatted commit history with details                                          |
+| `run`             | Start development server (`npm run dev`)                                               |
+| `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)       |
+| `i`               | Install project dependencies using configured auth token                               |
+| `eg config`       | Open configuration menu (language, default branch, AI provider)                        |
+| `-v`, `--version` | Display installed package version                                                      |
 
 ---
 

@@ -14,8 +14,9 @@ import { ui } from "../../ui/theme.js";
 import { getConfig } from "../../config/index.js";
 
 function extractFilename(statusLine) {
-  const raw = statusLine.slice(3).trim();
-  return raw.includes(" -> ") ? raw.split(" -> ")[1].trim() : raw;
+  const match = statusLine.match(/^[MADRCU? ]{2}\s+(.+)$/);
+  const raw = match ? match[1] : statusLine.replace(/^[MADRCU? ]+\s+/, "");
+  return raw.includes(" -> ") ? raw.split(" -> ")[1].trim() : raw.trim();
 }
 
 function getChangedFiles() {
@@ -162,7 +163,12 @@ const addChangesToBranch = async () => {
 
     for (const line of finalSelection) {
       const filename = extractFilename(line);
-      spawnSync("git", ["add", filename], { encoding: "utf-8" });
+      const addResult = spawnSync("git", ["add", "--", filename], {
+        encoding: "utf-8",
+      });
+      if (addResult.status !== 0) {
+        log.error(`git add failed for ${filename}: ${addResult.stderr}`);
+      }
     }
 
     const stagedStatus = execSync("git status --short", {
