@@ -1,8 +1,8 @@
-import { isCancel, cancel } from '@clack/prompts'
+import { isCancel, cancel } from "@clack/prompts";
 
 export default function handleUserCancellation(input) {
   if (isCancel(input)) {
-    cancel('❌ Operation cancelled. Exiting...')
-    return process.exit(0)
+    cancel("❌ Operation cancelled. Exiting...");
+    return process.exit(0);
   }
 }

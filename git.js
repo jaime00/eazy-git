@@ -1,19 +1,19 @@
-import { log } from '@clack/prompts'
+import { log } from "@clack/prompts";
 
-import pull from './src/actions/git/pull.js'
-import push from './src/actions/git/push.js'
-import removelast from './src/actions/git/removelast.js'
-import mergewith from './src/actions/git/mergewith.js'
-import commit from './src/actions/git/commit.js'
-import consolelog from './src/actions/git/log.js'
-import checkout from './src/actions/git/checkout.js';
+import pull from "./src/actions/git/pull.js";
+import push from "./src/actions/git/push.js";
+import removelast from "./src/actions/git/removelast.js";
+import mergewith from "./src/actions/git/mergewith.js";
+import commit from "./src/actions/git/commit.js";
+import consolelog from "./src/actions/git/log.js";
+import checkout from "./src/actions/git/checkout.js";
 
-import hasGitInstalled from './src/utils/hasGitInstalled.js';
+import hasGitInstalled from "./src/utils/hasGitInstalled.js";
 
 hasGitInstalled();
 
-const gitCommand = process.argv[1].split('/').pop()
-const args = process.argv.slice(2)
+const gitCommand = process.argv[1].split("/").pop();
+const args = process.argv.slice(2);
 
 const commands = {
   pull,
@@ -22,24 +22,24 @@ const commands = {
   mergewith: () => mergewith(args),
   commit: () => commit(args),
   checkout: () => checkout(args),
-  back: () => checkout('-'),
-  log: consolelog
-}
+  back: () => checkout("-"),
+  log: consolelog,
+};
 
 async function main() {
   try {
-    const command = commands[gitCommand]
+    const command = commands[gitCommand];
     if (!command) {
-      log.error(`Unknown command: ${gitCommand}`)
-      process.exit(1)
+      log.error(`Unknown command: ${gitCommand}`);
+      process.exit(1);
     }
 
-    await command()
-    process.exit(0)
+    await command();
+    process.exit(0);
   } catch (error) {
-    log.error(`Error executing command: ${error.message}`)
-    process.exit(1)
+    log.error(`Error executing command: ${error.message}`);
+    process.exit(1);
   }
 }
 
-main()
+main();
