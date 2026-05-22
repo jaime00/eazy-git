@@ -1,11 +1,12 @@
 import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
 
 export default function consolelog() {
-  try {
-    execSync("git log;", { stdio: "inherit" });
-  } catch (error) {
-    log.error(`❌ Error: ${error.message}`);
+  const result = spawnSync("git", ["log"], { stdio: "inherit" });
+
+  if (result.status !== 0) {
+    log.error(t("logError", "git log failed"));
     process.exit(1);
   }
 }

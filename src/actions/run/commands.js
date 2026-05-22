@@ -1,9 +1,20 @@
 import { execSync } from "child_process";
+import { log } from "@clack/prompts";
 
 export async function run() {
-  execSync("npm run dev", { stdio: "inherit" });
+  try {
+    execSync("npm run dev", { stdio: "inherit" });
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
 }
 
 export async function runrun() {
-  execSync("rm -rf .next; run", { stdio: "inherit" });
+  try {
+    execSync("rm -rf .next && npm run dev", { stdio: "inherit" });
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
 }

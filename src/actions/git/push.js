@@ -1,20 +1,20 @@
 import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
 
 export default function push(args) {
-  try {
-    const isForce =
-      args.includes("-f") ||
-      args.includes("--force") ||
-      args.includes("-force");
-    log.step("🚀 Pushing changes to remote...");
-    execSync(`git push ${isForce ? "-f " : ""}origin HEAD`, {
-      stdio: "inherit",
-    });
-    log.success(
-      `✅ Changes pushed ${isForce ? "forcefully " : ""}successfully!`,
-    );
-  } catch (error) {
-    log.error(`❌ Error: ${error.message}`);
+  const isForce =
+    args.includes("-f") || args.includes("--force") || args.includes("-force");
+
+  log.step(t("pushingChanges"));
+  const pushArgs = isForce
+    ? ["push", "-f", "origin", "HEAD"]
+    : ["push", "origin", "HEAD"];
+  const result = spawnSync("git", pushArgs, { stdio: "inherit" });
+
+  if (result.status === 0) {
+    log.success(isForce ? t("pushedForceSuccess") : t("pushedSuccess"));
+  } else {
+    log.error(t("pushQuickError", "push failed"));
   }
 }

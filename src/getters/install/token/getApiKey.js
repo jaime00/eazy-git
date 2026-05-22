@@ -1,14 +1,16 @@
 import { text } from "@clack/prompts";
 import handleUserCancellation from "../../../utils/handleUserCancellation.js";
+import { t } from "../../../i18n/index.js";
+import { ui } from "../../../ui/theme.js";
 
 const getApiKey = async () => {
   const apikey = await text({
-    message: "🔑 Enter your apikey:",
+    message: ui.secondary(t("enterApiKey")),
     placeholder: "",
     initialValue: "",
     required: true,
     validate(value) {
-      if (!value?.trim()) return `⚠️ API key is required!`;
+      if (!value?.trim()) return t("apiKeyRequired");
       return undefined;
     },
   });

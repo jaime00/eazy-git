@@ -1,13 +1,22 @@
 import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
 
 export default function pull() {
-  try {
-    log.step("📥 Fetching remote changes...");
-    execSync("git fetch", { stdio: "inherit" });
-    log.success("📦 Pulling changes into your branch...");
-    execSync("git pull origin HEAD", { stdio: "inherit" });
-  } catch (error) {
-    log.error(`💥 Error: ${error.message}`);
+  log.step(t("fetchingRemote"));
+  const fetchResult = spawnSync("git", ["fetch"], { stdio: "inherit" });
+
+  if (fetchResult.status !== 0) {
+    log.error(t("pullError", "fetch failed"));
+    return;
+  }
+
+  log.step(t("pullingChanges"));
+  const pullResult = spawnSync("git", ["pull", "origin", "HEAD"], {
+    stdio: "inherit",
+  });
+
+  if (pullResult.status !== 0) {
+    log.error(t("pullError", "pull failed"));
   }
 }

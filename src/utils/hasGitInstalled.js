@@ -1,12 +1,22 @@
 import { existsSync } from "fs";
 import { join } from "path";
+import { execSync } from "child_process";
+import { log } from "@clack/prompts";
+import { t } from "../i18n/index.js";
 
-const hasGitInstalled = () => {
+const ensureGitRepo = () => {
+  try {
+    execSync("git --version", { stdio: "ignore" });
+  } catch {
+    log.error(t("gitNotInstalled"));
+    process.exit(1);
+  }
+
   const gitDir = join(process.cwd(), ".git");
   if (!existsSync(gitDir)) {
-    console.error("❌ This directory is not a git repository");
+    log.error(t("notGitRepo"));
     process.exit(1);
   }
 };
 
-export default hasGitInstalled;
+export default ensureGitRepo;

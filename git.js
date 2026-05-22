@@ -9,6 +9,7 @@ import consolelog from "./src/actions/git/log.js";
 import checkout from "./src/actions/git/checkout.js";
 
 import hasGitInstalled from "./src/utils/hasGitInstalled.js";
+import { t } from "./src/i18n/index.js";
 
 hasGitInstalled();
 
@@ -30,14 +31,14 @@ async function main() {
   try {
     const command = commands[gitCommand];
     if (!command) {
-      log.error(`Unknown command: ${gitCommand}`);
+      log.error(`${t("unknownCommand")}: ${gitCommand}`);
       process.exit(1);
     }
 
     await command();
     process.exit(0);
   } catch (error) {
-    log.error(`Error executing command: ${error.message}`);
+    log.error(`${t("errorExecuting")}: ${error.message}`);
     process.exit(1);
   }
 }

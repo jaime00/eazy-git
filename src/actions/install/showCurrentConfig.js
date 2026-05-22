@@ -1,5 +1,6 @@
 import { log } from "@clack/prompts";
-import chalk from "chalk";
+import { t } from "../../i18n/index.js";
+import { ui } from "../../ui/theme.js";
 
 export default function showCurrentConfig({
   endpoint,
@@ -7,10 +8,15 @@ export default function showCurrentConfig({
   registryURL,
   registryName,
 }) {
-  log.info(`${chalk.hex("#199288")("⚙️  Current Configuration")}
-${chalk.hex("#9ca3af")(`   └─ endpoint: ${endpoint}`)}
-${chalk.hex("#9ca3af")(`   └─ apikey: ${apikey}`)}
-${chalk.hex("#9ca3af")(`   └─ registryURL: ${registryURL}`)}
-${chalk.hex("#9ca3af")(`   └─ registryName: ${registryName}`)}
+  const maskedKey =
+    apikey.length > 8
+      ? `${apikey.slice(0, 4)}${"*".repeat(apikey.length - 8)}${apikey.slice(-4)}`
+      : "****";
+
+  log.info(`${ui.secondary(t("currentConfig"))}
+${ui.muted(`   endpoint:     ${endpoint}`)}
+${ui.muted(`   apikey:       ${maskedKey}`)}
+${ui.muted(`   registryURL:  ${registryURL}`)}
+${ui.muted(`   registryName: ${registryName}`)}
 `);
 }

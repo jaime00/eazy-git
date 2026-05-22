@@ -1,0 +1,197 @@
+export default {
+  // General
+  welcome: "Welcome to",
+  subtitle: "your trusted CLI for GIT branch management",
+  operationCompleted: "Operation completed!",
+  operationCancelled: "Operation cancelled. Exiting...",
+  unknownCommand: "Unknown command",
+  errorExecuting: "Error executing command",
+  version: "eazy-git version",
+
+  // Main menu
+  whatToDo: "What would you like to do?",
+  addChanges: "Add Changes to Branch",
+  createOriginal: "Create Original Branch",
+  createTemporal: "Create Temporal Branch",
+
+  // Git checks
+  notGitRepo: "This directory is not a git repository",
+  gitNotInstalled: "git is not installed on the system",
+
+  // Add changes to branch
+  currentBranch: "Current branch",
+  filesChanged: "Files with changes",
+  noChangesPending: "No pending changes. Do you want to continue anyway?",
+  updatingRefs: "Updating remote references...",
+  refsUpdated: "References updated",
+  fetchFailed: "Could not fetch (continuing...)",
+  baseBranch: "From which base branch do you want to create the branch?",
+  baseBranchRequired: "Base branch is required",
+  ticketId: "What is the ticket identifier? (e.g.: DPW-0000)",
+  ticketRequired: "Ticket is required",
+  changeType: "What type of change is this?",
+  branchExistsLocal: (name) =>
+    `Branch "${name}" already exists locally. What would you like to do?`,
+  switchToIt: "Switch to it and continue",
+  cancel: "Cancel",
+  cancelledOp: "Operation cancelled.",
+  creatingBranch: (name, origin) =>
+    `Creating branch ${name} from origin/${origin}...`,
+  branchCreated: (name) => `Branch ${name} created`,
+  errorCreatingBranch: (msg) => `Error creating branch: ${msg}`,
+  noFilesToStage: "No files to stage.",
+  selectFiles: "Which files do you want to include in the commit?",
+  selectAllFiles: "Select all files",
+  stagedFiles: "Staged files",
+  stagedCorrect: "Are the staged files correct?",
+  aiProvider: "Which AI do you want to use for the commit suggestion?",
+  generatingCommit: (label) => `Generating commit suggestion with ${label}...`,
+  aiSuggestionFailed: (label) =>
+    `Could not get suggestion from ${label}. Write the message manually.`,
+  writeCommitMsg: "Write the commit message:",
+  commitMsgRequired: "Message is required",
+  suggestionOf: (label) => `${label} suggestion`,
+  useThisCommit: "Does this commit message look good?",
+  yesUseIt: "Yes, use it",
+  modify: "Modify",
+  commitSuccess: "Commit created successfully",
+  hookBlocked:
+    "The pre-commit hook blocked the commit. What would you like to do?",
+  retryHook: "I fixed it, re-stage and retry",
+  skipHook: "Skip the hook (--no-verify)",
+  commitNoHooks: "Commit created (without hooks)",
+  pushToRemote: "Do you want to push the branch to the remote repository?",
+  pushSuccess: "Push completed",
+  pushForceQuestion:
+    "The branch already exists on remote with different history. Force push? (git push -f)",
+  pushForceSuccess: "Force push completed",
+  pushForceError: (msg) => `Error in force push: ${msg}`,
+  pushError: (msg) => `Error in push: ${msg}`,
+  summaryTitle: "Summary",
+  summaryBranch: "Branch",
+  summaryFrom: "From",
+  summaryCommit: "Commit",
+  summaryFiles: (n) => `${n} files committed`,
+  summaryPush: "Push",
+  summaryPR: "Create PR",
+
+  // File statuses
+  statusModified: "modified",
+  statusAdded: "added",
+  statusDeleted: "deleted",
+  statusRenamed: "renamed",
+  statusUntracked: "untracked",
+
+  // Commit types
+  commitTypes: {
+    fix: "fix - bug fix",
+    feat: "feat - new feature",
+    refactor: "refactor - improvement without functional change",
+    chore: "chore - maintenance, dependencies",
+    docs: "docs - documentation",
+    test: "test - testing",
+    ci: "ci - continuous integration",
+    perf: "perf - performance",
+    style: "style - formatting, no logic change",
+  },
+
+  // Create original branch
+  selectBranchType: "Select the branch type:",
+  branchFix: "Fix",
+  branchImprovement: "Improvement",
+  branchFeature: "Feature",
+  branchRefactor: "Refactor",
+  creatingOriginalBranch: "Creating original branch...",
+  branchCreatedAndPushed: (name) =>
+    `Branch "${name}" created and pushed successfully!`,
+  branchCreatedSuccess: (name) => `Branch "${name}" created successfully!`,
+
+  // Create temporal branch
+  mergeBranchQuestion: "Which branch do you want to merge into?",
+  developDEV: "develop (DEV)",
+  releaseUAT: "release (UAT)",
+  temporalBranchCreated: "Temporal branch created successfully",
+  temporalBranchMerged: "Temporal branch merged successfully",
+  conflictsDetected: "Conflicts detected. Please resolve them manually!",
+  branchPushedToRemote: "Branch pushed to remote repository",
+  removeTemporalBranch: "Do you want to remove the temporal branch?",
+  temporalBranchDeleted: "Temporal branch deleted successfully",
+  errorCreatingTemporal: "Error creating the temporal branch",
+
+  // JIRA ticket
+  enterJiraCode: "Enter the JIRA ticket code:",
+  jiraRequired: "JIRA code is required!",
+  jiraInvalidFormat: "JIRA code must have the format DPW-0000",
+
+  // Quick git commands
+  fetchingRemote: "Fetching remote changes...",
+  pullingChanges: "Pulling changes into your branch...",
+  pullError: (msg) => `Error: ${msg}`,
+  pushingChanges: "Pushing changes to remote...",
+  pushedSuccess: "Changes pushed successfully!",
+  pushedForceSuccess: "Changes pushed (force) successfully!",
+  pushQuickError: (msg) => `Error: ${msg}`,
+  provideCommitMsg: "Please provide a commit message",
+  stagingChanges: "Staging changes...",
+  creatingCommit: "Creating commit...",
+  commitCreated: "Commit created successfully!",
+  commitError: (msg) => `Error: ${msg}`,
+  switchingPrevBranch: "Switching to previous branch...",
+  switchedTo: (branch) => `Successfully switched to ${branch} branch!`,
+  checkoutError: (msg) => `Error: ${msg}`,
+  fetchingLatest: "Fetching latest changes...",
+  mergingWith: (branch) => `Merging with ${branch}...`,
+  pushingMerged: "Pushing merged changes...",
+  mergeCompleted: "Merge completed successfully!",
+  mergeError: (msg) => `Error: ${msg}`,
+  removingLastCommit: "Removing last commit...",
+  removeLastConfirm:
+    "This will remove the last commit (changes will remain in staging). Continue?",
+  lastCommitRemoved: "Last commit removed successfully!",
+  removeLastError: (msg) => `Error: ${msg}`,
+  logError: (msg) => `Error: ${msg}`,
+
+  // Install
+  settingUpConfig: "Setting up your configuration",
+  configSaved: "Configuration saved",
+  missingConfigValues: "Missing required configuration values.",
+  errorWritingConfig: "Error writing configuration file:",
+  currentConfig: "Current configuration",
+  useThisConfig: "Would you like to use this configuration?",
+  installingDeps: "Installing dependencies...",
+  depsInstalled: "All dependencies were installed",
+  authFailed: "Authentication failed",
+  unexpectedError: "An unexpected error occurred",
+  enterEndpoint: "Enter your endpoint URL:",
+  urlRequired: "URL is required!",
+  urlMustBeHttp: "URL must use HTTP/HTTPS protocol",
+  urlMustHaveHost: "URL must include a hostname",
+  urlInvalid: "Please enter a valid URL",
+  enterApiKey: "Enter your apikey:",
+  apiKeyRequired: "API key is required!",
+  enterRegistryName:
+    "Enter your NPM registry name (without special characters):",
+  registryNameRequired: "Registry name is required!",
+  registryNameLettersOnly: "Registry name must contain only letters",
+  enterRegistryURL: "Enter your NPM registry URL (without http/https):",
+  registryURLRequired: "Registry URL is required!",
+  registryURLStartWithName:
+    "URL must start with a name only, avoid special characters",
+  registryURLNoProtocol:
+    "URL must not include 'http/https' protocol and must start with a letter",
+  registryURLNoSlash:
+    "URL must not start with '/' and must begin with a letter or number",
+  registryURLNoWWW:
+    "URL must not start with 'www' and must begin with a letter or number",
+
+  // Config command
+  languageSelect: "Select the interface language:",
+  languageChanged: (lang) => `Language changed to: ${lang}`,
+  configMenu: "What would you like to configure?",
+  configLanguage: "Interface language",
+  configDefaultBranch: "Default base branch",
+  configAIProvider: "Default AI provider",
+  configView: "View current configuration",
+  defaultBranchSet: (branch) => `Default base branch: ${branch}`,
+  aiProviderSet: (provider) => `Default AI provider: ${provider}`,
+};

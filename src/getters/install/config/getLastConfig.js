@@ -1,10 +1,11 @@
-import chalk from "chalk";
 import { confirm } from "@clack/prompts";
 import handleUserCancellation from "../../../utils/handleUserCancellation.js";
+import { t } from "../../../i18n/index.js";
+import { ui } from "../../../ui/theme.js";
 
 const getLastConfig = async () => {
   const config = await confirm({
-    message: chalk.hex("#199288")("Would you like to use this configuration?"),
+    message: ui.secondary(t("useThisConfig")),
   });
   handleUserCancellation(config);
   return config;

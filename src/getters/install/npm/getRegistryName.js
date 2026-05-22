@@ -1,19 +1,17 @@
 import { text } from "@clack/prompts";
 import handleUserCancellation from "../../../utils/handleUserCancellation.js";
+import { t } from "../../../i18n/index.js";
+import { ui } from "../../../ui/theme.js";
 
 const getRegistryName = async () => {
   const name = await text({
-    message: "📦 Enter your NPM registry name (without special characters):",
+    message: ui.secondary(t("enterRegistryName")),
     placeholder: "",
     initialValue: "",
     required: true,
     validate(value) {
-      if (!value?.trim()) return `⚠️ Registry name is required!`;
-
-      if (!/^[a-zA-Z]+$/.test(value)) {
-        return `❌ Registry name must contain only letters`;
-      }
-
+      if (!value?.trim()) return t("registryNameRequired");
+      if (!/^[a-zA-Z]+$/.test(value)) return t("registryNameLettersOnly");
       return undefined;
     },
   });

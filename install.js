@@ -1,6 +1,5 @@
 import { existsSync } from "fs";
 import { log, cancel } from "@clack/prompts";
-import chalk from "chalk";
 import os from "os";
 import path from "path";
 
@@ -10,6 +9,7 @@ import generateNpmrc from "./src/actions/install/generateNpmrc.js";
 import dropCurrentConfig from "./src/actions/install/dropCurrentConfig.js";
 import getCurrentConfig from "./src/actions/install/getCurrentConfig.js";
 import showCurrentConfig from "./src/actions/install/showCurrentConfig.js";
+import { t } from "./src/i18n/index.js";
 
 try {
   const configPath = path.join(os.homedir(), "config.js");
@@ -42,6 +42,6 @@ try {
     await generateNpmrc(config);
   }
 } catch (error) {
-  log.error(chalk.hex("#9ca3af")("An unexpected error occurred:"), error);
+  log.error(`${t("unexpectedError")}: ${error.message}`);
   process.exit(1);
 }

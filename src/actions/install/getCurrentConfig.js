@@ -1,12 +1,12 @@
 import { log } from "@clack/prompts";
-import chalk from "chalk";
 import os from "os";
 import path from "path";
+import { t } from "../../i18n/index.js";
 
 const getCurrentConfig = async () => {
   const configPath = path.join(os.homedir(), "config.js");
   const config = await import(configPath).catch((error) => {
-    log.error(chalk.hex("#9ca3af")("Error loading configuration:"), error);
+    log.error(`${t("unexpectedError")}: ${error.message}`);
     process.exit(1);
   });
 

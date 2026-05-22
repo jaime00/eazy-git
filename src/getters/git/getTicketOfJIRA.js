@@ -1,16 +1,17 @@
 import { text } from "@clack/prompts";
 import validateTicketOfJIRA from "../../utils/validateTicketOfJIRA.js";
 import handleUserCancellation from "../../utils/handleUserCancellation.js";
+import { t } from "../../i18n/index.js";
+import { ui } from "../../ui/theme.js";
 
 const getTicketOfJIRA = async () => {
   const ticket = await text({
-    message: "🎫 Enter the JIRA ticket code:",
+    message: ui.secondary(t("enterJiraCode")),
     placeholder: "DPW-0000",
     initialValue: "",
     validate(value) {
-      if (value.length === 0) return `⚠️ JIRA code is required!`;
-      if (!validateTicketOfJIRA(value))
-        return `❌ JIRA code must have the format DPW-0000`;
+      if (!value?.trim()) return t("jiraRequired");
+      if (!validateTicketOfJIRA(value)) return t("jiraInvalidFormat");
     },
   });
   handleUserCancellation(ticket);

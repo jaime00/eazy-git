@@ -1,24 +1,28 @@
 import { spinner, log } from "@clack/prompts";
-
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
 import createBranchName from "./createBranchName.js";
+import { t } from "../../i18n/index.js";
+import { getConfig } from "../../config/index.js";
 
 const createOriginalBranch = async () => {
+  const config = getConfig();
   const branchName = await createBranchName();
   const s = spinner();
   try {
-    s.start("🌱 Creating original branch...");
-    execSync(`git checkout -b ${branchName} origin/master`, {
-      stdio: "inherit",
-    });
-    execSync(`git push origin ${branchName}`, { stdio: "inherit" });
-    s.stop(
-      `✅ Branch "${branchName}" created and pushed to remote successfully!`,
+    s.start(t("creatingOriginalBranch"));
+    spawnSync(
+      "git",
+      ["checkout", "-b", branchName, `origin/${config.defaultBaseBranch}`],
+      {
+        stdio: "inherit",
+      },
     );
-    log.success(`🎉 Branch "${branchName}" created successfully!`);
+    spawnSync("git", ["push", "origin", branchName], { stdio: "inherit" });
+    s.stop(t("branchCreatedAndPushed", branchName));
+    log.success(t("branchCreatedSuccess", branchName));
   } catch (error) {
-    s.stop();
-    log.error(`❌ Error: ${error.message}`);
+    s.stop("");
+    log.error(t("errorCreatingBranch", error.message));
   }
 };
 

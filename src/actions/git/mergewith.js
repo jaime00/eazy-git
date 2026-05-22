@@ -1,17 +1,31 @@
 import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
 
 export default function mergeWith(args) {
-  try {
-    const branchName = args[0] ?? "develop";
-    log.step("🔄 Fetching latest changes...");
-    execSync("git fetch", { stdio: "inherit" });
-    log.step(`🔄 Merging with ${branchName}...`);
-    execSync(`git merge origin/${branchName}`, { stdio: "inherit" });
-    log.step("🚀 Pushing merged changes...");
-    execSync("git push origin HEAD", { stdio: "inherit" });
-    log.success("✅ Merge completed successfully!");
-  } catch (error) {
-    log.error(`❌ Error: ${error.message}`);
+  const branchName = args[0] ?? "develop";
+
+  log.step(t("fetchingLatest"));
+  spawnSync("git", ["fetch"], { stdio: "inherit" });
+
+  log.step(t("mergingWith", branchName));
+  const mergeResult = spawnSync("git", ["merge", `origin/${branchName}`], {
+    stdio: "inherit",
+  });
+
+  if (mergeResult.status !== 0) {
+    log.error(t("mergeError", "merge failed"));
+    return;
+  }
+
+  log.step(t("pushingMerged"));
+  const pushResult = spawnSync("git", ["push", "origin", "HEAD"], {
+    stdio: "inherit",
+  });
+
+  if (pushResult.status === 0) {
+    log.success(t("mergeCompleted"));
+  } else {
+    log.error(t("mergeError", "push failed"));
   }
 }

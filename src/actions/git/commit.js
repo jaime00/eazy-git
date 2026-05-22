@@ -1,20 +1,24 @@
 import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
 
 export default function commit(args) {
-  try {
-    const commitMsg = args[0];
-    if (!commitMsg) {
-      log.error("❌ Please provide a commit message");
-      process.exit(1);
-    }
+  const commitMsg = args[0];
+  if (!commitMsg) {
+    log.error(t("provideCommitMsg"));
+    process.exit(1);
+  }
 
-    log.step("📦 Staging changes...");
-    execSync("git add .", { stdio: "inherit" });
-    log.step("💾 Creating commit...");
-    execSync(`git commit -m "${commitMsg}"`, { stdio: "inherit" });
-    log.success("✅ Commit created successfully!");
-  } catch (error) {
-    log.error(`❌ Error: ${error.message}`);
+  log.step(t("stagingChanges"));
+  spawnSync("git", ["add", "."], { stdio: "inherit" });
+  log.step(t("creatingCommit"));
+  const result = spawnSync("git", ["commit", "-m", commitMsg], {
+    stdio: "inherit",
+  });
+
+  if (result.status === 0) {
+    log.success(t("commitCreated"));
+  } else {
+    log.error(t("commitError", "commit failed"));
   }
 }

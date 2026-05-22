@@ -9,22 +9,11 @@ import {
 } from "@clack/prompts";
 import { execSync, spawnSync, spawn } from "child_process";
 import handleUserCancellation from "../../utils/handleUserCancellation.js";
-
-const COMMIT_TYPES = [
-  { value: "fix", label: "fix — correccion de bug" },
-  { value: "feat", label: "feat — nueva funcionalidad" },
-  { value: "refactor", label: "refactor — mejora sin cambio funcional" },
-  { value: "chore", label: "chore — mantenimiento, dependencias" },
-  { value: "docs", label: "docs — documentacion" },
-  { value: "test", label: "test — pruebas" },
-  { value: "ci", label: "ci — integracion continua" },
-  { value: "perf", label: "perf — rendimiento" },
-  { value: "style", label: "style — formato, sin cambio de logica" },
-];
+import { t, getCommitTypes } from "../../i18n/index.js";
+import { ui } from "../../ui/theme.js";
+import { getConfig } from "../../config/index.js";
 
 function extractFilename(statusLine) {
-  // git status --short format: "XY filename" (first 2 chars = status, then space)
-  // For renames: "XY old -> new" — take the destination (after "->")
   const raw = statusLine.slice(3).trim();
   return raw.includes(" -> ") ? raw.split(" -> ")[1].trim() : raw;
 }
@@ -35,119 +24,143 @@ function getChangedFiles() {
 }
 
 const addChangesToBranch = async () => {
-  // --- Paso 0: Contexto inicial ---
+  const config = getConfig();
+  const commitTypes = getCommitTypes();
+
+  const COMMIT_TYPES = Object.entries(commitTypes).map(([value, label]) => ({
+    value,
+    label,
+  }));
+
+  const STATUS_LABELS = {
+    M: t("statusModified"),
+    A: t("statusAdded"),
+    D: t("statusDeleted"),
+    R: t("statusRenamed"),
+    "??": t("statusUntracked"),
+  };
+
+  // --- Step 0: Initial context ---
   const currentBranch = execSync("git rev-parse --abbrev-ref HEAD", {
     encoding: "utf-8",
   }).trim();
   const files = getChangedFiles();
 
-  log.info(`Branch actual: ${currentBranch}`);
-  log.info(`Archivos con cambios: ${files.length}`);
+  log.info(`${t("currentBranch")}: ${currentBranch}`);
+  log.info(`${t("filesChanged")}: ${files.length}`);
 
   if (files.length === 0) {
     const proceed = await confirm({
-      message: "No hay cambios pendientes. Deseas continuar de todas formas?",
+      message: t("noChangesPending"),
     });
     handleUserCancellation(proceed);
     if (!proceed) return;
   }
 
   const s = spinner();
-  s.start("Actualizando referencias remotas...");
+  s.start(t("updatingRefs"));
   try {
     execSync("git fetch --quiet");
-    s.stop("Referencias actualizadas");
+    s.stop(t("refsUpdated"));
   } catch {
-    s.stop("No se pudo hacer fetch (continuando...)");
+    s.stop(t("fetchFailed"));
   }
 
-  // --- Paso 1: Configuracion de la rama ---
+  // --- Step 1: Branch configuration ---
   const originBranch = await text({
-    message: "Desde que branch base quieres crear la rama?",
-    placeholder: "release",
-    validate: (v) =>
-      v.length === 0 ? "El branch base es requerido" : undefined,
+    message: ui.secondary(t("baseBranch")),
+    placeholder: config.defaultBaseBranch,
+    initialValue: config.defaultBaseBranch,
+    validate: (v) => (!v?.trim() ? t("baseBranchRequired") : undefined),
   });
   handleUserCancellation(originBranch);
 
   const ticketReference = await text({
-    message: "Cual es el identificador del ticket? (ej: DPW-0000)",
+    message: ui.secondary(t("ticketId")),
     placeholder: "DPW-0000",
-    validate: (v) => (v.length === 0 ? "El ticket es requerido" : undefined),
+    validate: (v) => (!v?.trim() ? t("ticketRequired") : undefined),
   });
   handleUserCancellation(ticketReference);
 
   const ticketType = await select({
-    message: "Que tipo de cambio es?",
+    message: ui.secondary(t("changeType")),
     options: COMMIT_TYPES,
   });
   handleUserCancellation(ticketType);
 
-  // --- Paso 2: Crear la rama ---
+  // --- Step 2: Create branch ---
   const branchName = `${ticketType}/${ticketReference}`;
-  const branchExists = execSync(`git branch --list ${branchName}`, {
+  const branchExists = spawnSync("git", ["branch", "--list", branchName], {
     encoding: "utf-8",
-  }).trim();
+  }).stdout.trim();
 
   if (branchExists) {
     const choice = await select({
-      message: `La rama "${branchName}" ya existe localmente. Que deseas hacer?`,
+      message: ui.secondary(t("branchExistsLocal", branchName)),
       options: [
-        { value: "checkout", label: "Cambiarme a ella y continuar" },
-        { value: "cancel", label: "Cancelar" },
+        { value: "checkout", label: t("switchToIt") },
+        { value: "cancel", label: t("cancel") },
       ],
     });
     handleUserCancellation(choice);
     if (choice === "cancel") {
-      log.warn("Operacion cancelada.");
+      log.warn(t("cancelledOp"));
       return;
     }
-    execSync(`git checkout ${branchName}`, { stdio: "inherit" });
+    spawnSync("git", ["checkout", branchName], { stdio: "inherit" });
   } else {
     try {
-      s.start(`Creando rama ${branchName} desde origin/${originBranch}...`);
-      execSync(`git checkout -b ${branchName} origin/${originBranch}`);
-      s.stop(`Rama ${branchName} creada`);
+      s.start(t("creatingBranch", branchName, originBranch));
+      spawnSync(
+        "git",
+        ["checkout", "-b", branchName, `origin/${originBranch}`],
+        {
+          stdio: "pipe",
+        },
+      );
+      s.stop(t("branchCreated", branchName));
     } catch (err) {
       s.stop("");
-      log.error(`Error al crear la rama: ${err.message}`);
+      log.error(t("errorCreatingBranch", err.message));
       return;
     }
   }
 
-  // --- Paso 3: Seleccion de archivos ---
+  // --- Step 3: File selection ---
   let stageConfirmed = false;
 
   while (!stageConfirmed) {
     const currentFiles = getChangedFiles();
     if (currentFiles.length === 0) {
-      log.warn("No hay archivos para stagear.");
+      log.warn(t("noFilesToStage"));
       return;
     }
 
-    const STATUS_LABELS = {
-      M: "modificado",
-      A: "agregado",
-      D: "eliminado",
-      R: "renombrado",
-      "??": "sin rastrear",
-    };
+    const SELECT_ALL = "__select_all__";
+    const fileOptions = currentFiles.map((line) => {
+      const status = line.slice(0, 2).trim();
+      const filename = extractFilename(line);
+      const statusLabel = STATUS_LABELS[status] ?? status;
+      return { value: line, label: filename, hint: statusLabel };
+    });
 
     const selectedLines = await multiselect({
-      message: "Cuales archivos quieres incluir en el commit?",
-      options: currentFiles.map((line) => {
-        const status = line.slice(0, 2).trim();
-        const filename = extractFilename(line);
-        const statusLabel = STATUS_LABELS[status] ?? status;
-        return { value: line, label: filename, hint: statusLabel };
-      }),
+      message: ui.secondary(t("selectFiles")),
+      options: [
+        { value: SELECT_ALL, label: ui.primary(t("selectAllFiles")) },
+        ...fileOptions,
+      ],
       required: true,
     });
     handleUserCancellation(selectedLines);
 
+    const finalSelection = selectedLines.includes(SELECT_ALL)
+      ? currentFiles
+      : selectedLines;
+
     spawnSync("git", ["restore", "--staged", "."], { encoding: "utf-8" });
 
-    for (const line of selectedLines) {
+    for (const line of finalSelection) {
       const filename = extractFilename(line);
       spawnSync("git", ["add", filename], { encoding: "utf-8" });
     }
@@ -155,10 +168,10 @@ const addChangesToBranch = async () => {
     const stagedStatus = execSync("git status --short", {
       encoding: "utf-8",
     }).trim();
-    note(stagedStatus, "Archivos en stage");
+    note(stagedStatus, t("stagedFiles"));
 
     const ok = await confirm({
-      message: "Los archivos en stage son correctos?",
+      message: t("stagedCorrect"),
     });
     handleUserCancellation(ok);
     stageConfirmed = ok;
@@ -168,7 +181,7 @@ const addChangesToBranch = async () => {
     }
   }
 
-  // --- Paso 4: Sugerir mensaje de commit con IA ---
+  // --- Step 4: AI commit suggestion ---
   const diff = execSync("git diff --cached", { encoding: "utf-8" });
 
   const prompt = `Analiza el siguiente git diff y sugiere UN SOLO mensaje de commit en formato convencional.
@@ -185,11 +198,12 @@ Git diff:
 ${diff}`;
 
   const aiChoice = await select({
-    message: "Con que IA quieres generar la sugerencia de commit?",
+    message: ui.secondary(t("aiProvider")),
     options: [
       { value: "claude", label: "Claude" },
       { value: "opencode", label: "Opencode" },
     ],
+    initialValue: config.aiProvider,
   });
   handleUserCancellation(aiChoice);
 
@@ -200,7 +214,7 @@ ${diff}`;
 
   const { binary, args, label } = aiConfig[aiChoice];
 
-  s.start(`Generando sugerencia de commit con ${label}...`);
+  s.start(t("generatingCommit", label));
   const aiResult = await new Promise((resolve) => {
     let stdout = "";
     let stderr = "";
@@ -225,26 +239,23 @@ ${diff}`;
   let commitMsg;
 
   if (aiResult.error || aiResult.status !== 0) {
-    log.warn(
-      `No se pudo obtener sugerencia de ${label}. Escribe el mensaje manualmente.`,
-    );
+    log.warn(t("aiSuggestionFailed", label));
     const customMsg = await text({
-      message: "Escribe el mensaje de commit:",
+      message: ui.secondary(t("writeCommitMsg")),
       initialValue: `${ticketType}(${ticketReference}): `,
-      validate: (v) =>
-        v.trim().length === 0 ? "El mensaje es requerido" : undefined,
+      validate: (v) => (!v?.trim() ? t("commitMsgRequired") : undefined),
     });
     handleUserCancellation(customMsg);
     commitMsg = customMsg;
   } else {
     const suggestion = aiResult.stdout.trim();
-    note(suggestion, `Sugerencia de ${label}`);
+    note(suggestion, t("suggestionOf", label));
 
     const useIt = await select({
-      message: "Este mensaje de commit te parece bien?",
+      message: ui.secondary(t("useThisCommit")),
       options: [
-        { value: "yes", label: "Si, usar este" },
-        { value: "modify", label: "Modificar" },
+        { value: "yes", label: t("yesUseIt") },
+        { value: "modify", label: t("modify") },
       ],
     });
     handleUserCancellation(useIt);
@@ -253,66 +264,63 @@ ${diff}`;
       commitMsg = suggestion;
     } else {
       const customMsg = await text({
-        message: "Escribe el mensaje de commit:",
+        message: ui.secondary(t("writeCommitMsg")),
         initialValue: suggestion,
-        validate: (v) =>
-          v.trim().length === 0 ? "El mensaje es requerido" : undefined,
+        validate: (v) => (!v?.trim() ? t("commitMsgRequired") : undefined),
       });
       handleUserCancellation(customMsg);
       commitMsg = customMsg;
     }
   }
 
-  // --- Paso 5: Commit ---
-  const safeMsg = commitMsg.replace(/"/g, '\\"');
+  // --- Step 5: Commit (using spawnSync for safety) ---
   let committed = false;
   while (!committed) {
-    try {
-      execSync(`git commit -m "${safeMsg}"`, { stdio: "inherit" });
-      log.success("Commit realizado correctamente");
+    const result = spawnSync("git", ["commit", "-m", commitMsg], {
+      stdio: "inherit",
+    });
+
+    if (result.status === 0) {
+      log.success(t("commitSuccess"));
       committed = true;
-    } catch {
+    } else {
       const hookChoice = await select({
-        message: "El pre-commit hook bloqueo el commit. Que deseas hacer?",
+        message: ui.secondary(t("hookBlocked")),
         options: [
-          {
-            value: "retry",
-            label: "Ya lo corregi, agrega los cambios y vuelve a intentarlo",
-          },
-          { value: "noverify", label: "Saltar el hook (--no-verify)" },
-          { value: "cancel", label: "Cancelar" },
+          { value: "retry", label: t("retryHook") },
+          { value: "noverify", label: t("skipHook") },
+          { value: "cancel", label: t("cancel") },
         ],
       });
       handleUserCancellation(hookChoice);
 
       if (hookChoice === "cancel") return;
       if (hookChoice === "noverify") {
-        execSync(`git commit --no-verify -m "${safeMsg}"`, {
+        spawnSync("git", ["commit", "--no-verify", "-m", commitMsg], {
           stdio: "inherit",
         });
-        log.success("Commit realizado (sin hooks)");
+        log.success(t("commitNoHooks"));
         committed = true;
       }
-      // 'retry': el loop vuelve a intentar git commit tras re-stagear automaticamente
       if (hookChoice === "retry") {
-        execSync("git add -u", { stdio: "inherit" });
+        spawnSync("git", ["add", "-u"], { stdio: "inherit" });
       }
     }
   }
 
-  // --- Paso 6: Push opcional ---
+  // --- Step 6: Optional push ---
   const doPush = await confirm({
-    message: "Deseas subir la rama al repositorio remoto?",
+    message: t("pushToRemote"),
   });
   handleUserCancellation(doPush);
 
   let prLink = "";
   if (doPush) {
     const executePush = (force = false) => {
-      const cmd = force
-        ? `git push -f origin ${branchName}`
-        : `git push -u origin ${branchName}`;
-      execSync(cmd, { stdio: "inherit" });
+      const pushArgs = force
+        ? ["push", "-f", "origin", branchName]
+        : ["push", "-u", "origin", branchName];
+      spawnSync("git", pushArgs, { stdio: "inherit" });
     };
 
     const buildPrLink = () => {
@@ -330,36 +338,35 @@ ${diff}`;
       return "";
     };
 
-    try {
-      executePush();
-      log.success("Push realizado");
+    const pushResult = spawnSync("git", ["push", "-u", "origin", branchName], {
+      stdio: "inherit",
+    });
+
+    if (pushResult.status === 0) {
+      log.success(t("pushSuccess"));
       prLink = buildPrLink();
-    } catch (err) {
-      const isRejected =
-        err.message.includes("rejected") ||
-        err.message.includes("non-fast-forward");
-      if (isRejected) {
-        const forceIt = await confirm({
-          message:
-            "La rama ya existe en el remoto con historial diferente. Deseas forzar el push? (git push -f)",
-        });
-        handleUserCancellation(forceIt);
-        if (forceIt) {
-          try {
-            executePush(true);
-            log.success("Push forzado realizado");
-            prLink = buildPrLink();
-          } catch (forceErr) {
-            log.error(`Error en el push forzado: ${forceErr.message}`);
-          }
+    } else {
+      const forceIt = await confirm({
+        message: t("pushForceQuestion"),
+      });
+      handleUserCancellation(forceIt);
+      if (forceIt) {
+        const forceResult = spawnSync(
+          "git",
+          ["push", "-f", "origin", branchName],
+          { stdio: "inherit" },
+        );
+        if (forceResult.status === 0) {
+          log.success(t("pushForceSuccess"));
+          prLink = buildPrLink();
+        } else {
+          log.error(t("pushForceError", "push failed"));
         }
-      } else {
-        log.error(`Error en el push: ${err.message}`);
       }
     }
   }
 
-  // --- Resumen final ---
+  // --- Final summary ---
   const committedCount = execSync(
     'git diff --name-only HEAD~1 HEAD 2>/dev/null || git show --name-only --format="" HEAD',
     { encoding: "utf-8" },
@@ -369,16 +376,19 @@ ${diff}`;
     .filter(Boolean).length;
 
   const summaryLines = [
-    `Rama:     ${branchName}`,
-    `Desde:    origin/${originBranch}`,
-    `Commit:   ${commitMsg}`,
-    `Archivos: ${committedCount} archivos commiteados`,
+    `${t("summaryBranch")}:   ${branchName}`,
+    `${t("summaryFrom")}:    origin/${originBranch}`,
+    `${t("summaryCommit")}:  ${commitMsg}`,
+    `${t("summaryFiles", committedCount)}`,
     ...(doPush && prLink
-      ? [`Push:     origin/${branchName}`, `Crear PR: ${prLink}`]
+      ? [
+          `${t("summaryPush")}:    origin/${branchName}`,
+          `${t("summaryPR")}:  ${prLink}`,
+        ]
       : []),
   ];
 
-  note(summaryLines.join("\n"), "Listo!");
+  note(summaryLines.join("\n"), t("summaryTitle"));
 };
 
 export default addChangesToBranch;

@@ -1,12 +1,24 @@
-import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { log, confirm } from "@clack/prompts";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
+import handleUserCancellation from "../../utils/handleUserCancellation.js";
 
-export default function removelast() {
-  try {
-    log.step("⏪ Removing last commit...");
-    execSync("git reset --soft HEAD~1", { stdio: "inherit" });
-    log.success("✅ Last commit removed successfully!");
-  } catch (error) {
-    log.error(`❌ Error: ${error.message}`);
+export default async function removelast() {
+  const proceed = await confirm({
+    message: t("removeLastConfirm"),
+  });
+  handleUserCancellation(proceed);
+
+  if (!proceed) return;
+
+  log.step(t("removingLastCommit"));
+  const result = spawnSync("git", ["reset", "--soft", "HEAD~1"], {
+    stdio: "inherit",
+  });
+
+  if (result.status === 0) {
+    log.success(t("lastCommitRemoved"));
+  } else {
+    log.error(t("removeLastError", "reset failed"));
   }
 }

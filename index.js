@@ -1,25 +1,31 @@
 import { select, intro, outro, cancel } from "@clack/prompts";
-import chalk from "chalk";
 
 import createOriginalBranch from "./src/actions/git/createOriginalBranch.js";
 import createTemporalBranch from "./src/actions/git/createTemporalBranch.js";
 import addChangesToBranch from "./src/actions/git/addChangesToBranch.js";
+import configure from "./src/actions/config/configure.js";
 import getCurrentPackageVersion from "./src/getters/git/getCurrentPackageVersion.js";
 import hasGitInstalled from "./src/utils/hasGitInstalled.js";
+import { t } from "./src/i18n/index.js";
+import { ui } from "./src/ui/theme.js";
 
 const args = process.argv.slice(2);
 
 if (args.includes("-v") || args.includes("--version")) {
-  console.log("eazy-git version:", getCurrentPackageVersion());
+  console.log(`${t("version")}: ${getCurrentPackageVersion()}`);
+  process.exit(0);
+}
+
+if (args.includes("config") || args.includes("--config")) {
+  await configure();
   process.exit(0);
 }
 
 hasGitInstalled();
 
-// Welcome banner
 intro(
-  chalk.hex("#57d7c4")(`
-    Welcome to
+  ui.primary(`
+    ${t("welcome")}
 
     .-------------------------------------------------------------------------------.
     | ██████████  █████████  ████████████████ █████      █████████  ████████████████|
@@ -31,17 +37,18 @@ intro(
     | ███████████████   ████████████████   █████       ░░█████████  █████   █████   |
     |░░░░░░░░░░░░░░░   ░░░░░░░░░░░░░░░░   ░░░░░         ░░░░░░░░░  ░░░░░   ░░░░░    |
     '-------------------------------------------------------------------------------'
-    
-    ${chalk.hex("#9ca3af")("your trusted CLI for GIT branch management")}
+
+    ${ui.muted(t("subtitle"))}
   `),
 );
 
 const action = await select({
-  message: chalk.hex("#199288")("What would you like to do?"),
+  message: ui.secondary(t("whatToDo")),
   options: [
-    { value: "ACB", label: "✦  Add Changes to Branch" },
-    { value: "CRO", label: "🌱 Create Original Branch" },
-    { value: "CRT", label: "🌿 Create Temporal Branch" },
+    { value: "ACB", label: t("addChanges") },
+    { value: "CRO", label: t("createOriginal") },
+    { value: "CRT", label: t("createTemporal") },
+    { value: "CFG", label: t("configMenu") },
   ],
   required: true,
   initialValue: "ACB",
@@ -50,9 +57,10 @@ const action = await select({
 if (action === "ACB") await addChangesToBranch();
 else if (action === "CRO") await createOriginalBranch();
 else if (action === "CRT") await createTemporalBranch();
+else if (action === "CFG") await configure();
 else {
-  cancel("❌ The operation was cancelled. Exiting...");
+  cancel(t("operationCancelled"));
   process.exit(0);
 }
 
-outro(chalk.hex("#06D6A0")("Operation completed!"));
+outro(ui.success(t("operationCompleted")));

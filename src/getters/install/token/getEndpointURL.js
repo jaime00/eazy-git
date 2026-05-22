@@ -1,27 +1,23 @@
 import { text } from "@clack/prompts";
-import chalk from "chalk";
 import handleUserCancellation from "../../../utils/handleUserCancellation.js";
+import { t } from "../../../i18n/index.js";
+import { ui } from "../../../ui/theme.js";
 
 const getEndpointURL = async () => {
   const domain = await text({
-    message: "🔗 Enter your endpoint URL:",
+    message: ui.secondary(t("enterEndpoint")),
     placeholder: "",
     initialValue: "",
     required: true,
     validate(value) {
-      if (!value?.trim()) return chalk.hex("#9ca3af")("⚠️ URL is required!");
-
+      if (!value?.trim()) return t("urlRequired");
       try {
         const url = new URL(value);
-        if (!url.protocol.startsWith("http")) {
-          return chalk.hex("#9ca3af")("❌ URL must use HTTP/HTTPS protocol");
-        }
-        if (!url.hostname) {
-          return chalk.hex("#9ca3af")("❌ URL must include a hostname");
-        }
+        if (!url.protocol.startsWith("http")) return t("urlMustBeHttp");
+        if (!url.hostname) return t("urlMustHaveHost");
         return undefined;
-      } catch (error) {
-        return chalk.hex("#9ca3af")("❌ Please enter a valid URL");
+      } catch {
+        return t("urlInvalid");
       }
     },
   });

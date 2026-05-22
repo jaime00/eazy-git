@@ -1,8 +1,8 @@
 import { writeFileSync } from "fs";
 import { execSync } from "child_process";
-import { log, stream, spinner, outro } from "@clack/prompts";
-import chalk from "chalk";
-import { setTimeout as sleep } from "node:timers/promises";
+import { log, spinner, outro } from "@clack/prompts";
+import { t } from "../../i18n/index.js";
+import { ui } from "../../ui/theme.js";
 
 export default async function generateNpmrc({
   endpoint,
@@ -10,9 +10,9 @@ export default async function generateNpmrc({
   registryName,
   registryURL,
 }) {
+  const s = spinner();
   try {
-    const s = spinner();
-    s.start("Installing dependencies...");
+    s.start(t("installingDeps"));
 
     const response = await fetch(endpoint, {
       method: "POST",
@@ -27,12 +27,11 @@ export default async function generateNpmrc({
 `;
     writeFileSync("./.npmrc", npmrcContent);
     execSync("npm i", { stdio: "inherit" });
-    s.stop(chalk.hex("#57d7c4")("🎉 All dependencies were installed"));
-    await sleep(1000);
+    s.stop(ui.primary(t("depsInstalled")));
+    outro(ui.success(t("operationCompleted")));
   } catch (error) {
-    log.error(chalk.hex("#9ca3af")("❌ Authentication failed:"), error.message);
-    console.log("error.message: ", error.message);
-  } finally {
+    s.stop("");
+    log.error(`${t("authFailed")}: ${error.message}`);
     process.exit(1);
   }
 }

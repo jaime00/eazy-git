@@ -1,19 +1,21 @@
 import { log } from "@clack/prompts";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { t } from "../../i18n/index.js";
 
 export default function checkout(args) {
-  try {
-    const branch = args[0] || "-";
-    const isPreviousBranch = branch === "-";
-    if (isPreviousBranch) {
-      log.step("🔄 Switching to previous branch...");
-    }
-    execSync(`git checkout ${branch}`, { stdio: "inherit" });
-    log.success(
-      `✅ Successfully switched to ${isPreviousBranch ? "previous" : branch} branch!`,
-    );
-  } catch (error) {
-    log.error(`❌ Error: ${error.message}`);
+  const branch = args[0] || "-";
+  const isPreviousBranch = branch === "-";
+
+  if (isPreviousBranch) {
+    log.step(t("switchingPrevBranch"));
+  }
+
+  const result = spawnSync("git", ["checkout", branch], { stdio: "inherit" });
+
+  if (result.status === 0) {
+    log.success(t("switchedTo", isPreviousBranch ? "previous" : branch));
+  } else {
+    log.error(t("checkoutError", "checkout failed"));
     process.exit(1);
   }
 }
