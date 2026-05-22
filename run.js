@@ -1,6 +1,6 @@
 import { log } from "@clack/prompts";
 
-import { run, runrun } from "./src/run-actions/commands.js";
+import { run, runrun } from "./src/actions/run/commands.js";
 
 const comannd = process.argv[1].split("/").pop();
 
