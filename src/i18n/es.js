@@ -188,10 +188,11 @@ export default {
   languageSelect: "Selecciona el idioma de la interfaz:",
   languageChanged: (lang) => `Idioma cambiado a: ${lang}`,
   configMenu: "Que deseas configurar?",
-  configLanguage: "Idioma de la interfaz",
+  configLanguage: "Cambiar idioma",
   configDefaultBranch: "Rama base por defecto",
   configAIProvider: "Proveedor de IA por defecto",
   configView: "Ver configuracion actual",
   defaultBranchSet: (branch) => `Rama base por defecto: ${branch}`,
   aiProviderSet: (provider) => `Proveedor de IA por defecto: ${provider}`,
+  goBack: "Volver",
 };

@@ -25,6 +25,7 @@ export default async function configure() {
     handleUserCancellation(lang);
     saveConfig({ language: lang });
     log.success(t("languageChanged", lang));
+    return configure();
   }
 
   if (action === "defaultBranch") {
@@ -37,6 +38,7 @@ export default async function configure() {
     handleUserCancellation(branch);
     saveConfig({ defaultBaseBranch: branch });
     log.success(t("defaultBranchSet", branch));
+    return configure();
   }
 
   if (action === "aiProvider") {
@@ -51,6 +53,7 @@ export default async function configure() {
     handleUserCancellation(provider);
     saveConfig({ aiProvider: provider });
     log.success(t("aiProviderSet", provider));
+    return configure();
   }
 
   if (action === "view") {
@@ -59,5 +62,13 @@ export default async function configure() {
       .map(([key, value]) => `  ${key}: ${value}`)
       .join("\n");
     note(lines, ui.secondary(t("currentConfig")));
+
+    const back = await select({
+      message: ui.secondary(""),
+      options: [{ value: "back", label: ui.muted(t("goBack")) }],
+    });
+    handleUserCancellation(back);
+
+    return configure();
   }
 }

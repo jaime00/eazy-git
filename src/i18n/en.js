@@ -188,10 +188,11 @@ export default {
   languageSelect: "Select the interface language:",
   languageChanged: (lang) => `Language changed to: ${lang}`,
   configMenu: "What would you like to configure?",
-  configLanguage: "Interface language",
+  configLanguage: "Change language",
   configDefaultBranch: "Default base branch",
   configAIProvider: "Default AI provider",
   configView: "View current configuration",
   defaultBranchSet: (branch) => `Default base branch: ${branch}`,
   aiProviderSet: (provider) => `Default AI provider: ${provider}`,
+  goBack: "Go back",
 };
