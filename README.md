@@ -67,6 +67,7 @@ This opens an interactive menu with the following options:
 | `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)       |
 | `i`               | Install project dependencies using configured auth token                               |
 | `eg config`       | Open configuration menu (language, default branch, AI provider)                        |
+| `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                        |
 | `-v`, `--version` | Display installed package version                                                      |
 
 ---
@@ -104,7 +105,8 @@ eazy-git/
 ├── src/
 │   ├── actions/
 │   │   ├── config/
-│   │   │   └── configure.js
+│   │   │   ├── configure.js
+│   │   │   └── upgrade.js
 │   │   ├── git/
 │   │   │   ├── addChangesToBranch.js
 │   │   │   ├── checkout.js

@@ -4,6 +4,7 @@ import createOriginalBranch from "#actions/git/createOriginalBranch.js";
 import createTemporalBranch from "#actions/git/createTemporalBranch.js";
 import addChangesToBranch from "#actions/git/addChangesToBranch.js";
 import configure from "#actions/config/configure.js";
+import upgrade from "#actions/config/upgrade.js";
 import getCurrentPackageVersion from "#getters/git/getCurrentPackageVersion.js";
 import hasGitInstalled from "#utils/hasGitInstalled.js";
 import { t } from "#i18n/index.js";
@@ -18,6 +19,11 @@ if (args.includes("-v") || args.includes("--version")) {
 
 if (args.includes("config") || args.includes("--config")) {
   await configure();
+  process.exit(0);
+}
+
+if (args.includes("upgrade")) {
+  await upgrade();
   process.exit(0);
 }
 

@@ -184,6 +184,15 @@ export default {
   registryURLNoWWW:
     "URL must not start with 'www' and must begin with a letter or number",
 
+  // Upgrade
+  currentVersionLabel: "Current version",
+  checkingUpdates: "Checking for updates...",
+  upgradeCheckFailed: "Could not check the latest version",
+  alreadyLatest: (v) => `Already on the latest version (${v})`,
+  upgrading: (v) => `Upgrading to v${v}...`,
+  upgradeError: "Error upgrading eazy-git",
+  upgradeSuccess: (v) => `eazy-git upgraded to v${v}!`,
+
   // Config command
   languageSelect: "Select the interface language:",
   languageChanged: (lang) => `Language changed to: ${lang}`,
