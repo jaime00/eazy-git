@@ -159,6 +159,7 @@ eazy-git/
 ├── git.js
 ├── index.js
 ├── install.js
+├── jsconfig.json
 ├── run.js
 ├── package.json
 └── README.md

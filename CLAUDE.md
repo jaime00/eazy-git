@@ -35,6 +35,21 @@ eazy-git is a globally-installed npm CLI tool for Git branch management. It uses
 - `src/getters/` — Data retrieval functions (current branch, environment, package version)
 - `src/utils/` — Shared utilities (handleUserCancellation, hasGitInstalled, isEmpty)
 
+### Import Aliases
+
+The project uses Node.js subpath imports (`#` prefix) configured in `package.json` `imports` field and esbuild `alias` in `build.js`. IDE support via `jsconfig.json`.
+
+| Alias        | Path            |
+| ------------ | --------------- |
+| `#actions/*` | `src/actions/*` |
+| `#config/*`  | `src/config/*`  |
+| `#getters/*` | `src/getters/*` |
+| `#i18n/*`    | `src/i18n/*`    |
+| `#ui/*`      | `src/ui/*`      |
+| `#utils/*`   | `src/utils/*`   |
+
+Use aliases for cross-directory imports. Keep relative imports (`./`) only for files within the same directory.
+
 ## Conventions
 
 - All user-facing strings must use `t()` from `src/i18n/index.js` — add keys to both `es.js` and `en.js`
