@@ -1,9 +1,9 @@
 import { log, confirm } from "@clack/prompts";
 import { spawnSync } from "child_process";
-import getEnvironment from "../../getters/git/getEnvironment.js";
-import getCurrentBranch from "../../getters/git/getCurrentBranch.js";
-import handleUserCancellation from "../../utils/handleUserCancellation.js";
-import { t } from "../../i18n/index.js";
+import getEnvironment from "#getters/git/getEnvironment.js";
+import getCurrentBranch from "#getters/git/getCurrentBranch.js";
+import handleUserCancellation from "#utils/handleUserCancellation.js";
+import { t } from "#i18n/index.js";
 
 const createTemporalBranch = async () => {
   try {

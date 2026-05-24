@@ -1,15 +1,15 @@
 import { log } from "@clack/prompts";
 
-import pull from "./src/actions/git/pull.js";
-import push from "./src/actions/git/push.js";
-import removelast from "./src/actions/git/removelast.js";
-import mergewith from "./src/actions/git/mergewith.js";
-import commit from "./src/actions/git/commit.js";
-import consolelog from "./src/actions/git/log.js";
-import checkout from "./src/actions/git/checkout.js";
+import pull from "#actions/git/pull.js";
+import push from "#actions/git/push.js";
+import removelast from "#actions/git/removelast.js";
+import mergewith from "#actions/git/mergewith.js";
+import commit from "#actions/git/commit.js";
+import consolelog from "#actions/git/log.js";
+import checkout from "#actions/git/checkout.js";
 
-import hasGitInstalled from "./src/utils/hasGitInstalled.js";
-import { t } from "./src/i18n/index.js";
+import hasGitInstalled from "#utils/hasGitInstalled.js";
+import { t } from "#i18n/index.js";
 
 hasGitInstalled();
 

@@ -3,13 +3,13 @@ import { log, cancel } from "@clack/prompts";
 import os from "os";
 import path from "path";
 
-import getLastConfig from "./src/getters/install/config/getLastConfig.js";
-import addnewConfig from "./src/actions/install/addNewConfig.js";
-import generateNpmrc from "./src/actions/install/generateNpmrc.js";
-import dropCurrentConfig from "./src/actions/install/dropCurrentConfig.js";
-import getCurrentConfig from "./src/actions/install/getCurrentConfig.js";
-import showCurrentConfig from "./src/actions/install/showCurrentConfig.js";
-import { t } from "./src/i18n/index.js";
+import getLastConfig from "#getters/install/config/getLastConfig.js";
+import addnewConfig from "#actions/install/addNewConfig.js";
+import generateNpmrc from "#actions/install/generateNpmrc.js";
+import dropCurrentConfig from "#actions/install/dropCurrentConfig.js";
+import getCurrentConfig from "#actions/install/getCurrentConfig.js";
+import showCurrentConfig from "#actions/install/showCurrentConfig.js";
+import { t } from "#i18n/index.js";
 
 try {
   const configPath = path.join(os.homedir(), "config.js");

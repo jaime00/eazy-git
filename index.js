@@ -1,13 +1,13 @@
 import { select, intro, outro, cancel } from "@clack/prompts";
 
-import createOriginalBranch from "./src/actions/git/createOriginalBranch.js";
-import createTemporalBranch from "./src/actions/git/createTemporalBranch.js";
-import addChangesToBranch from "./src/actions/git/addChangesToBranch.js";
-import configure from "./src/actions/config/configure.js";
-import getCurrentPackageVersion from "./src/getters/git/getCurrentPackageVersion.js";
-import hasGitInstalled from "./src/utils/hasGitInstalled.js";
-import { t } from "./src/i18n/index.js";
-import { ui } from "./src/ui/theme.js";
+import createOriginalBranch from "#actions/git/createOriginalBranch.js";
+import createTemporalBranch from "#actions/git/createTemporalBranch.js";
+import addChangesToBranch from "#actions/git/addChangesToBranch.js";
+import configure from "#actions/config/configure.js";
+import getCurrentPackageVersion from "#getters/git/getCurrentPackageVersion.js";
+import hasGitInstalled from "#utils/hasGitInstalled.js";
+import { t } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
 
 const args = process.argv.slice(2);
 

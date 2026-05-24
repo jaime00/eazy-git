@@ -1,6 +1,6 @@
 import { log } from "@clack/prompts";
 import { spawnSync } from "child_process";
-import { t } from "../../i18n/index.js";
+import { t } from "#i18n/index.js";
 
 export default function consolelog() {
   const result = spawnSync("git", ["log"], { stdio: "inherit" });

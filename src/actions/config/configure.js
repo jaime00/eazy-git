@@ -1,8 +1,8 @@
 import { select, log, note } from "@clack/prompts";
-import { getConfig, saveConfig } from "../../config/index.js";
-import { t, getAvailableLanguages } from "../../i18n/index.js";
-import { ui } from "../../ui/theme.js";
-import handleUserCancellation from "../../utils/handleUserCancellation.js";
+import { getConfig, saveConfig } from "#config/index.js";
+import { t, getAvailableLanguages } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
+import handleUserCancellation from "#utils/handleUserCancellation.js";
 
 export default async function configure() {
   const action = await select({

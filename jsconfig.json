@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "#config/*": ["src/config/*"],
+      "#i18n/*": ["src/i18n/*"],
+      "#ui/*": ["src/ui/*"],
+      "#utils/*": ["src/utils/*"],
+      "#actions/*": ["src/actions/*"],
+      "#getters/*": ["src/getters/*"]
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { log } from "@clack/prompts";
 import os from "os";
 import path from "path";
-import { t } from "../../i18n/index.js";
+import { t } from "#i18n/index.js";
 
 const getCurrentConfig = async () => {
   const configPath = path.join(os.homedir(), "config.js");

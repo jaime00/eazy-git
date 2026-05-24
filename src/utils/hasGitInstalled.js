@@ -2,7 +2,7 @@ import { existsSync } from "fs";
 import { join } from "path";
 import { execSync } from "child_process";
 import { log } from "@clack/prompts";
-import { t } from "../i18n/index.js";
+import { t } from "#i18n/index.js";
 
 const ensureGitRepo = () => {
   try {

@@ -1,8 +1,8 @@
 import { spinner, log } from "@clack/prompts";
 import { spawnSync } from "child_process";
 import createBranchName from "./createBranchName.js";
-import { t } from "../../i18n/index.js";
-import { getConfig } from "../../config/index.js";
+import { t } from "#i18n/index.js";
+import { getConfig } from "#config/index.js";
 
 const createOriginalBranch = async () => {
   const config = getConfig();

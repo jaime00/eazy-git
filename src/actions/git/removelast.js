@@ -1,7 +1,7 @@
 import { log, confirm } from "@clack/prompts";
 import { spawnSync } from "child_process";
-import { t } from "../../i18n/index.js";
-import handleUserCancellation from "../../utils/handleUserCancellation.js";
+import { t } from "#i18n/index.js";
+import handleUserCancellation from "#utils/handleUserCancellation.js";
 
 export default async function removelast() {
   const proceed = await confirm({

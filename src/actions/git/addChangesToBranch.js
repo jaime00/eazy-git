@@ -8,10 +8,10 @@ import {
   note,
 } from "@clack/prompts";
 import { execSync, spawnSync, spawn } from "child_process";
-import handleUserCancellation from "../../utils/handleUserCancellation.js";
-import { t, getCommitTypes } from "../../i18n/index.js";
-import { ui } from "../../ui/theme.js";
-import { getConfig } from "../../config/index.js";
+import handleUserCancellation from "#utils/handleUserCancellation.js";
+import { t, getCommitTypes } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
+import { getConfig } from "#config/index.js";
 
 function extractFilename(statusLine) {
   const match = statusLine.match(/^[MADRCU? ]{2}\s+(.+)$/);

@@ -20,6 +20,14 @@ Promise.all(
       banner: {
         js: "#!/usr/bin/env node",
       },
+      alias: {
+        "#config": "./src/config",
+        "#i18n": "./src/i18n",
+        "#ui": "./src/ui",
+        "#utils": "./src/utils",
+        "#actions": "./src/actions",
+        "#getters": "./src/getters",
+      },
     }),
   ),
 ).catch(() => process.exit(1));

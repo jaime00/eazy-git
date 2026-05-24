@@ -1,7 +1,7 @@
 import { confirm } from "@clack/prompts";
-import handleUserCancellation from "../../../utils/handleUserCancellation.js";
-import { t } from "../../../i18n/index.js";
-import { ui } from "../../../ui/theme.js";
+import handleUserCancellation from "#utils/handleUserCancellation.js";
+import { t } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
 
 const getLastConfig = async () => {
   const config = await confirm({

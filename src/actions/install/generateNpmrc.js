@@ -1,8 +1,8 @@
 import { writeFileSync } from "fs";
 import { execSync } from "child_process";
 import { log, spinner, outro } from "@clack/prompts";
-import { t } from "../../i18n/index.js";
-import { ui } from "../../ui/theme.js";
+import { t } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
 
 export default async function generateNpmrc({
   endpoint,

@@ -3,13 +3,13 @@ import { log, intro } from "@clack/prompts";
 import os from "os";
 import path from "path";
 
-import getEndpointURL from "../../getters/install/token/getEndpointURL.js";
-import getApiKey from "../../getters/install/token/getApiKey.js";
-import getRegistryName from "../../getters/install/npm/getRegistryName.js";
-import getRegistryURL from "../../getters/install/npm/getRegistryURL.js";
-import isEmpty from "../../utils/isEmpty.js";
-import { t } from "../../i18n/index.js";
-import { ui } from "../../ui/theme.js";
+import getEndpointURL from "#getters/install/token/getEndpointURL.js";
+import getApiKey from "#getters/install/token/getApiKey.js";
+import getRegistryName from "#getters/install/npm/getRegistryName.js";
+import getRegistryURL from "#getters/install/npm/getRegistryURL.js";
+import isEmpty from "#utils/isEmpty.js";
+import { t } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
 
 const addNewConfig = async () => {
   intro(ui.primary(t("settingUpConfig")));

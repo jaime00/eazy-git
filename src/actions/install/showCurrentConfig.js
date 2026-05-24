@@ -1,6 +1,6 @@
 import { log } from "@clack/prompts";
-import { t } from "../../i18n/index.js";
-import { ui } from "../../ui/theme.js";
+import { t } from "#i18n/index.js";
+import { ui } from "#ui/theme.js";
 
 export default function showCurrentConfig({
   endpoint,

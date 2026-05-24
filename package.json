@@ -3,6 +3,14 @@
   "version": "0.2.10",
   "main": "dist/index.js",
   "type": "module",
+  "imports": {
+    "#config/*": "./src/config/*",
+    "#i18n/*": "./src/i18n/*",
+    "#ui/*": "./src/ui/*",
+    "#utils/*": "./src/utils/*",
+    "#actions/*": "./src/actions/*",
+    "#getters/*": "./src/getters/*"
+  },
   "author": "Jaime Torres",
   "license": "MIT",
   "description": "CLI tool that simplifies branch management in Git. It automates common workflows and maintains a consistent branch structure.",

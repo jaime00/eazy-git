@@ -1,6 +1,6 @@
 import { log } from "@clack/prompts";
 import { spawnSync } from "child_process";
-import { t } from "../../i18n/index.js";
+import { t } from "#i18n/index.js";
 
 export default function pull() {
   log.step(t("fetchingRemote"));
