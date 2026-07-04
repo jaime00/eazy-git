@@ -52,23 +52,23 @@ This opens an interactive menu with the following options:
 
 ## 🧰 Available Commands
 
-| Command           | Description                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------- |
-| `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                           |
-| `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                    |
-| `push`            | Push local changes to remote repository (`git push origin HEAD`)                       |
-| `removelast`      | Undo last commit while preserving changes in working directory (shows commit details)  |
-| `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)         |
-| `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message            |
-| `back`            | Switch back to the previously checked out branch                                       |
-| `checkout`        | Switch to a specified branch or return to the previous branch                          |
-| `log`             | Display formatted commit history with details                                          |
-| `run`             | Start development server (`npm run dev`)                                               |
-| `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)       |
-| `i`               | Install project dependencies using configured auth token                               |
-| `eg config`       | Open configuration menu (language, default branch, AI provider)                        |
-| `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                        |
-| `-v`, `--version` | Display installed package version                                                      |
+| Command           | Description                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                          |
+| `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                   |
+| `push`            | Push local changes to remote repository (`git push origin HEAD`)                      |
+| `removelast`      | Undo last commit while preserving changes in working directory (shows commit details) |
+| `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)        |
+| `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message           |
+| `back`            | Switch back to the previously checked out branch                                      |
+| `checkout`        | Switch to a specified branch or return to the previous branch                         |
+| `log`             | Display formatted commit history with details                                         |
+| `run`             | Start development server (`npm run dev`)                                              |
+| `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)      |
+| `i`               | Install project dependencies using configured auth token                              |
+| `eg config`       | Open configuration menu (language, default branch, AI provider)                       |
+| `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                       |
+| `-v`, `--version` | Display installed package version                                                     |
 
 ---
 
@@ -89,7 +89,7 @@ eg config
 
 ## 🤖 AI Commit Suggestions
 
-When using the "Add Changes to Branch" flow, eazy-git can generate commit message suggestions using AI. Supported providers:
+When using the "Add Changes to Branch" flow or running `commit` without arguments, eazy-git can generate commit message suggestions using AI. Supported providers:
 
 - **Claude**
 - **Opencode**
@@ -193,8 +193,8 @@ Distributed under the MIT [License](LICENSE).
 
 ## 📬 Contact
 
-- 🌐 **Portfolio**: [Visit my website](https://jaime00portfolio.netlify.app/)
-- 💼 **LinkedIn**: [linkedin.com/in/jaime00](https://www.linkedin.com/in/jaime00)
+- 🌐 **Portfolio**: [Visit my website](https://jaimetorresv.com)
+- 💼 **LinkedIn**: [linkedin.com/in/jaimetorresv](https://www.linkedin.com/in/jaimetorresv/)
 - 📧 **Email**: [imjaimetorresv@gmail.com](mailto:imjaimetorresv@gmail.com)
 - 🐙 **GitHub**: [github.com/jaime00](https://github.com/jaime00)
 
