@@ -19,7 +19,7 @@ eazy-git is a globally-installed npm CLI tool for Git branch management. It uses
 ### Entry Points
 
 - **`index.js`** → `dist/index.js` — Main interactive menu (`eg`, `eazy-git`). Options: Add Changes to Branch, Create Original Branch, Create Temporal Branch, Configure.
-- **`git.js`** → `dist/git.js` — Quick git commands (`pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`). Routes via `process.argv[1]` filename matching.
+- **`git.js`** → `dist/git.js` — Quick git commands (`pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`). Routes via `process.argv[1]` filename matching. `commit` without args launches an interactive flow (file selection, AI suggestion, hook handling); with args it does a quick `git add . && git commit`.
 - **`run.js`** → `dist/run.js` — npm script runners (`run`, `runrun`).
 - **`install.js`** → `dist/install.js` — npm registry config (`i`).
 

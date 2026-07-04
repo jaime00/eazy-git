@@ -57,9 +57,9 @@ This opens an interactive menu with the following options:
 | `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                           |
 | `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                    |
 | `push`            | Push local changes to remote repository (`git push origin HEAD`)                       |
-| `removelast`      | Undo last commit while preserving changes in working directory (asks for confirmation) |
+| `removelast`      | Undo last commit while preserving changes in working directory (shows commit details)  |
 | `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)         |
-| `commit`          | Stage all changes and commit with a provided message                                   |
+| `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message            |
 | `back`            | Switch back to the previously checked out branch                                       |
 | `checkout`        | Switch to a specified branch or return to the previous branch                          |
 | `log`             | Display formatted commit history with details                                          |
