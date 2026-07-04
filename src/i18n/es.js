@@ -147,7 +147,8 @@ export default {
   removingLastCommit: "Eliminando ultimo commit...",
   removeLastConfirm:
     "Esto eliminara el ultimo commit (los cambios se mantienen en staging). Continuar?",
-  lastCommitRemoved: "Ultimo commit eliminado correctamente!",
+  lastCommitRemoved: (hash) => `commit ${hash} eliminado correctamente`,
+  removedCommitDetail: "Detalle del commit",
   removeLastError: (msg) => `Error: ${msg}`,
   logError: (msg) => `Error: ${msg}`,
 
