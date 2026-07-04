@@ -1,4 +1,4 @@
-import { select, log, note } from "@clack/prompts";
+import { select, text, log, note } from "@clack/prompts";
 import { getConfig, saveConfig } from "#config/index.js";
 import { t, getAvailableLanguages } from "#i18n/index.js";
 import { ui } from "#ui/theme.js";
@@ -29,7 +29,6 @@ export default async function configure() {
   }
 
   if (action === "defaultBranch") {
-    const { text } = await import("@clack/prompts");
     const branch = await text({
       message: ui.secondary(t("baseBranch")),
       initialValue: getConfig().defaultBaseBranch,
@@ -58,8 +57,14 @@ export default async function configure() {
 
   if (action === "view") {
     const config = getConfig();
+    const sensitivePattern = /key|token|secret/i;
     const lines = Object.entries(config)
-      .map(([key, value]) => `  ${key}: ${value}`)
+      .map(([key, value]) => {
+        const display = sensitivePattern.test(key) && typeof value === "string" && value.length > 4
+          ? `****${value.slice(-4)}`
+          : value;
+        return `  ${key}: ${display}`;
+      })
       .join("\n");
     note(lines, ui.secondary(t("currentConfig")));
 

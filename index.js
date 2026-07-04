@@ -1,4 +1,4 @@
-import { select, intro, outro, cancel } from "@clack/prompts";
+import { select, intro, outro, log } from "@clack/prompts";
 
 import createOriginalBranch from "#actions/git/createOriginalBranch.js";
 import createTemporalBranch from "#actions/git/createTemporalBranch.js";
@@ -7,6 +7,7 @@ import configure from "#actions/config/configure.js";
 import upgrade from "#actions/config/upgrade.js";
 import getCurrentPackageVersion from "#getters/git/getCurrentPackageVersion.js";
 import hasGitInstalled from "#utils/hasGitInstalled.js";
+import handleUserCancellation from "#utils/handleUserCancellation.js";
 import { t } from "#i18n/index.js";
 import { ui } from "#ui/theme.js";
 
@@ -48,25 +49,28 @@ intro(
   `),
 );
 
-const action = await select({
-  message: ui.secondary(t("whatToDo")),
-  options: [
-    { value: "ACB", label: t("addChanges") },
-    { value: "CRO", label: t("createOriginal") },
-    { value: "CRT", label: t("createTemporal") },
-    { value: "CFG", label: t("configMenu") },
-  ],
-  required: true,
-  initialValue: "ACB",
-});
+try {
+  const action = await select({
+    message: ui.secondary(t("whatToDo")),
+    options: [
+      { value: "ACB", label: t("addChanges") },
+      { value: "CRO", label: t("createOriginal") },
+      { value: "CRT", label: t("createTemporal") },
+      { value: "CFG", label: t("configMenu") },
+    ],
+    required: true,
+    initialValue: "ACB",
+  });
 
-if (action === "ACB") await addChangesToBranch();
-else if (action === "CRO") await createOriginalBranch();
-else if (action === "CRT") await createTemporalBranch();
-else if (action === "CFG") await configure();
-else {
-  cancel(t("operationCancelled"));
-  process.exit(0);
+  handleUserCancellation(action);
+
+  if (action === "ACB") await addChangesToBranch();
+  else if (action === "CRO") await createOriginalBranch();
+  else if (action === "CRT") await createTemporalBranch();
+  else if (action === "CFG") await configure();
+
+  outro(ui.success(t("operationCompleted")));
+} catch (err) {
+  log.error(err.message);
+  process.exit(1);
 }
-
-outro(ui.success(t("operationCompleted")));

@@ -152,9 +152,13 @@ eazy-git/
 │   ├── ui/
 │   │   └── theme.js
 │   └── utils/
+│       ├── aiCommitSuggestion.js
+│       ├── commitWithHooks.js
+│       ├── gitFiles.js
 │       ├── handleUserCancellation.js
 │       ├── hasGitInstalled.js
 │       ├── isEmpty.js
+│       ├── selectFiles.js
 │       └── validateTicketOfJIRA.js
 │
 ├── build.js

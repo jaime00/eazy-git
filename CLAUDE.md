@@ -33,7 +33,7 @@ eazy-git is a globally-installed npm CLI tool for Git branch management. It uses
 
 - `src/actions/` — Command implementations (git/, install/, config/, run/)
 - `src/getters/` — Data retrieval functions (current branch, environment, package version)
-- `src/utils/` — Shared utilities (handleUserCancellation, hasGitInstalled, isEmpty)
+- `src/utils/` — Shared utilities (handleUserCancellation, hasGitInstalled, isEmpty, gitFiles, selectFiles, aiCommitSuggestion, commitWithHooks)
 
 ### Import Aliases
 
@@ -50,13 +50,24 @@ The project uses Node.js subpath imports (`#` prefix) configured in `package.jso
 
 Use aliases for cross-directory imports. Keep relative imports (`./`) only for files within the same directory.
 
+### Shared Commit Flow (`src/utils/`)
+
+Both `commit.js` and `addChangesToBranch.js` share the interactive commit flow via reusable utils:
+
+- **`gitFiles.js`** — `extractFilename()`, `getChangedFiles()`, `getStatusLabels()` for parsing `git status --short` output
+- **`selectFiles.js`** — `selectAndStageFiles()` — multiselect file picker with "select all" option and staging confirmation loop. Returns `true` if files were staged, `false` if no files available.
+- **`aiCommitSuggestion.js`** — `getAICommitMessage({ diff, commitPrefix })` — AI provider selection, prompt generation, suggestion display, and use/modify flow. Returns the final commit message string.
+- **`commitWithHooks.js`** — `commitWithHooks(commitMsg)` — commit execution with retry/skip-hooks/cancel loop. Returns `true` if committed, `false` if cancelled.
+
 ## Conventions
 
 - All user-facing strings must use `t()` from `src/i18n/index.js` — add keys to both `es.js` and `en.js`
 - All prompts use `ui.secondary()` for the question color
 - Git commands use `spawnSync` with array args (never string concatenation to avoid shell injection)
 - Errors use `log.error()` from `@clack/prompts`, never `console.error`
-- User cancellation must be handled with `handleUserCancellation()` from `src/utils/`
+- User cancellation must be handled with `handleUserCancellation()` from `src/utils/` — call it immediately after every `select`, `text`, `multiselect`, `confirm` prompt
+- Entry-point async flows should be wrapped in try/catch with `log.error(err.message)` and `process.exit(1)`
+- Config view must mask sensitive values (keys containing "key", "token", "secret") showing only last 4 chars
 - Dependencies: `@clack/prompts` (interactive UI), `chalk` (colors)
 
 ## Commits
