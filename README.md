@@ -52,23 +52,23 @@ This opens an interactive menu with the following options:
 
 ## 🧰 Available Commands
 
-| Command           | Description                                                                           |
-| ----------------- | ------------------------------------------------------------------------------------- |
-| `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                          |
-| `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                   |
-| `push`            | Push local changes to remote repository (`git push origin HEAD`)                      |
-| `removelast`      | Undo last commit while preserving changes in working directory (shows commit details) |
-| `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)        |
-| `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message           |
-| `back`            | Switch back to the previously checked out branch                                      |
-| `checkout`        | Switch to a specified branch or return to the previous branch                         |
-| `log`             | Display formatted commit history (passes args to `git log`, e.g. `log -p` / `log --patch`)|
-| `run`             | Start development server (`npm run dev`)                                              |
-| `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)      |
-| `i`               | Configure npm registry authentication (AWS CodeArtifact) and generate `.npmrc`        |
-| `eg config`       | Open configuration menu (language, default branch, AI provider)                       |
-| `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                       |
-| `-v`, `--version` | Display installed package version                                                     |
+| Command           | Description                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                               |
+| `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                        |
+| `push`            | Push local changes to remote repository (`git push origin HEAD`)                           |
+| `removelast`      | Undo last commit while preserving changes in working directory (shows commit details)      |
+| `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)             |
+| `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message                |
+| `back`            | Switch back to the previously checked out branch                                           |
+| `checkout`        | Switch to a specified branch or return to the previous branch                              |
+| `log`             | Display formatted commit history (passes args to `git log`, e.g. `log -p` / `log --patch`) |
+| `run`             | Start development server (`npm run dev`)                                                   |
+| `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)           |
+| `i`               | Configure npm registry authentication (AWS CodeArtifact) and generate `.npmrc`             |
+| `eg config`       | Open configuration menu (language, default branch, AI provider)                            |
+| `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                            |
+| `-v`, `--version` | Display installed package version                                                          |
 
 ---
 

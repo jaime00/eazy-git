@@ -1,9 +1,10 @@
-import { isCancel, cancel } from "@clack/prompts";
-import { t } from "#i18n/index.js";
+import { cancel, isCancel } from '@clack/prompts'
+
+import { t } from '#i18n/index.js'
 
 export default function handleUserCancellation(input) {
   if (isCancel(input)) {
-    cancel(t("operationCancelled"));
-    return process.exit(0);
+    cancel(t('operationCancelled'))
+    return process.exit(0)
   }
 }

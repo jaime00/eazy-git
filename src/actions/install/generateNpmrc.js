@@ -1,37 +1,39 @@
-import { writeFileSync } from "fs";
-import { execSync } from "child_process";
-import { log, spinner, outro } from "@clack/prompts";
-import { t } from "#i18n/index.js";
-import { ui } from "#ui/theme.js";
+import { log, outro, spinner } from '@clack/prompts'
+import { execSync } from 'child_process'
+import { writeFileSync } from 'fs'
+
+import { t } from '#i18n/index.js'
+
+import { ui } from '#ui/theme.js'
 
 export default async function generateNpmrc({
   endpoint,
   apikey,
   registryName,
-  registryURL,
+  registryURL
 }) {
-  const s = spinner();
+  const s = spinner()
   try {
-    s.start(t("installingDeps"));
+    s.start(t('installingDeps'))
 
     const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { apikey },
-    });
+      method: 'POST',
+      headers: { apikey }
+    })
 
-    const authToken = await response.text();
+    const authToken = await response.text()
     const npmrcContent = `registry=https://registry.npmjs.org/
 @${registryName}:registry=https://${registryURL}/
 //${registryURL}/:always-auth=true
 //${registryURL}/:_authToken=${authToken}
-`;
-    writeFileSync("./.npmrc", npmrcContent);
-    execSync("npm i", { stdio: "inherit" });
-    s.stop(ui.primary(t("depsInstalled")));
-    outro(ui.success(t("operationCompleted")));
+`
+    writeFileSync('./.npmrc', npmrcContent)
+    execSync('npm i', { stdio: 'inherit' })
+    s.stop(ui.primary(t('depsInstalled')))
+    outro(ui.success(t('operationCompleted')))
   } catch (error) {
-    s.stop("");
-    log.error(`${t("authFailed")}: ${error.message}`);
-    process.exit(1);
+    s.stop('')
+    log.error(`${t('authFailed')}: ${error.message}`)
+    process.exit(1)
   }
 }

@@ -1,20 +1,23 @@
-import { select } from "@clack/prompts";
-import handleUserCancellation from "#utils/handleUserCancellation.js";
-import { t } from "#i18n/index.js";
-import { ui } from "#ui/theme.js";
+import { select } from '@clack/prompts'
+
+import { t } from '#i18n/index.js'
+
+import { ui } from '#ui/theme.js'
+
+import handleUserCancellation from '#utils/handleUserCancellation.js'
 
 const getEnvironment = async () => {
   const environment = await select({
-    message: ui.secondary(t("mergeBranchQuestion")),
+    message: ui.secondary(t('mergeBranchQuestion')),
     options: [
-      { value: "develop", label: t("developDEV") },
-      { value: "release", label: t("releaseUAT") },
+      { value: 'develop', label: t('developDEV') },
+      { value: 'release', label: t('releaseUAT') }
     ],
     required: true,
-    initialValue: "develop",
-  });
-  handleUserCancellation(environment);
-  return environment;
-};
+    initialValue: 'develop'
+  })
+  handleUserCancellation(environment)
+  return environment
+}
 
-export default getEnvironment;
+export default getEnvironment

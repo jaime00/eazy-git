@@ -1,22 +1,25 @@
-import { text } from "@clack/prompts";
-import handleUserCancellation from "#utils/handleUserCancellation.js";
-import { t } from "#i18n/index.js";
-import { ui } from "#ui/theme.js";
+import { text } from '@clack/prompts'
+
+import { t } from '#i18n/index.js'
+
+import { ui } from '#ui/theme.js'
+
+import handleUserCancellation from '#utils/handleUserCancellation.js'
 
 const getRegistryName = async () => {
   const name = await text({
-    message: ui.secondary(t("enterRegistryName")),
-    placeholder: "",
-    initialValue: "",
+    message: ui.secondary(t('enterRegistryName')),
+    placeholder: '',
+    initialValue: '',
     required: true,
     validate(value) {
-      if (!value?.trim()) return t("registryNameRequired");
-      if (!/^[a-zA-Z]+$/.test(value)) return t("registryNameLettersOnly");
-      return undefined;
-    },
-  });
-  handleUserCancellation(name);
-  return name;
-};
+      if (!value?.trim()) return t('registryNameRequired')
+      if (!/^[a-zA-Z]+$/.test(value)) return t('registryNameLettersOnly')
+      return undefined
+    }
+  })
+  handleUserCancellation(name)
+  return name
+}
 
-export default getRegistryName;
+export default getRegistryName

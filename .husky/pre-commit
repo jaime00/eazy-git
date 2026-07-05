@@ -1,0 +1,22 @@
+# Enforce #/ alias imports — no relative imports beyond same-directory ./file
+STAGED_JS=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/.*\.(js|jsx)$' || true)
+if [ -n "$STAGED_JS" ]; then
+  VIOLATIONS=$(echo "$STAGED_JS" | xargs grep -Hn "from '\.\./\|from '\./[^']*/" 2>/dev/null || true)
+  if [ -n "$VIOLATIONS" ]; then
+    echo "No uses rutas absolutas, solo relativas we ;)"
+    echo ""
+    echo "$VIOLATIONS" | while IFS=: read -r file line content; do
+      echo "  \033[34m${file}:${line}\033[0m"
+      echo "  \033[31m${content}\033[0m"
+    done
+    echo ""
+    echo ""
+    exit 1
+  fi
+fi
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -v '^\.claude/skills/' | sed 's| |\\ |g')
+
+# Prettier on all staged files
+npx prettier $STAGED_FILES --write --ignore-unknown
+git update-index --again
