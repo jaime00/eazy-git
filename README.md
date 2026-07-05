@@ -46,7 +46,7 @@ This opens an interactive menu with the following options:
 - **Add Changes to Branch** — Stage files, generate a commit (with optional AI-suggested messages), and push
 - **Create Original Branch** — Create a new branch from a base branch following naming conventions
 - **Create Temporal Branch** — Create and merge a temporary branch into develop or release
-- **Configure** — Change language, default base branch, or AI provider
+- **Configure** — Change language, default base branch, AI provider, or view current configuration
 
 ---
 
@@ -62,10 +62,10 @@ This opens an interactive menu with the following options:
 | `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message           |
 | `back`            | Switch back to the previously checked out branch                                      |
 | `checkout`        | Switch to a specified branch or return to the previous branch                         |
-| `log`             | Display formatted commit history with details                                         |
+| `log`             | Display formatted commit history (passes args to `git log`, e.g. `log -p` / `log --patch`)|
 | `run`             | Start development server (`npm run dev`)                                              |
 | `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)      |
-| `i`               | Install project dependencies using configured auth token                              |
+| `i`               | Configure npm registry authentication (AWS CodeArtifact) and generate `.npmrc`        |
 | `eg config`       | Open configuration menu (language, default branch, AI provider)                       |
 | `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                       |
 | `-v`, `--version` | Display installed package version                                                     |
