@@ -96,6 +96,8 @@ When using the "Add Changes to Branch" flow or running `commit` without argument
 
 Configure your preferred provider via `eg config`.
 
+> **Note:** Both providers are invoked as local CLI binaries (`claude` and `opencode`). They must be installed and available in your `PATH` — no API key configuration within eazy-git is required.
+
 ---
 
 ## 📁 Project Structure
