@@ -24,7 +24,7 @@ const commands = {
   commit: () => commit(args),
   checkout: () => checkout(args),
   back: () => checkout("-"),
-  log: consolelog,
+  log: () => consolelog(args),
 };
 
 async function main() {

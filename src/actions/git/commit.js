@@ -54,7 +54,6 @@ async function interactiveCommit() {
   // --- Step 1: Ticket ID (optional) ---
   const ticketReference = await text({
     message: ui.secondary(t("ticketId")),
-    placeholder: "DPW-0000",
   });
   handleUserCancellation(ticketReference);
 
