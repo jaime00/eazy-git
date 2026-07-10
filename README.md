@@ -8,6 +8,13 @@
 
 ---
 
+## 📋 Requirements
+
+- **Node.js** v18 or higher
+- **Git** installed and available in your `PATH`
+
+---
+
 ## 🚀 Installation
 
 Install it globally with npm:
@@ -46,7 +53,7 @@ This opens an interactive menu with the following options:
 - **Add Changes to Branch** — Stage files, generate a commit (with optional AI-suggested messages), and push. JIRA ticket is optional — if omitted, the branch is named after the commit type only (e.g., `fix`)
 - **Create Original Branch** — Create a new branch from a base branch following naming conventions
 - **Create Temporal Branch** — Create and merge a temporary branch into develop or release
-- **Configure** — Change language, default base branch, AI provider, or view current configuration
+- **Configure** — Change language, default base branch, AI provider, reuse last commit setting, or view current configuration
 
 ---
 
@@ -61,7 +68,7 @@ This opens an interactive menu with the following options:
 | `mergewith`       | Merge current branch with another remote branch (defaults to `origin/develop`)             |
 | `commit`          | Stage and commit: interactive flow (no args) or quick commit with a message                |
 | `back`            | Switch back to the previously checked out branch                                           |
-| `checkout`        | Switch to a branch, create a new one with `-b <name>`, or return to the previous branch    |
+| `checkout`        | Switch to a branch or create a new one with `-b <name>`                                    |
 | `log`             | Display formatted commit history (passes args to `git log`, e.g. `log -p` / `log --patch`) |
 | `build`           | Build the project (`npm run build` or `pnpm run build` — auto-detected)                    |
 | `run`             | Start development server (`npm run dev` or `pnpm run dev` — auto-detected)                 |
