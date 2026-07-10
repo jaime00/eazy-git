@@ -13,9 +13,12 @@ eg                     # Run the interactive CLI (after linking)
 No test framework is configured. Prettier is configured (`.prettierrc`) with `@trivago/prettier-plugin-sort-imports`. Husky runs prettier automatically on staged files at pre-commit — no need to run it manually.
 
 ```bash
-npm run release:patch   # bump patch, build, publish to npm
-npm run release:minor   # bump minor, build, publish to npm
-npm run release:major   # bump major, build, publish to npm
+npm run release:patch      # bump patch, build, publish to npm
+npm run release:minor      # bump minor, build, publish to npm
+npm run release:major      # bump major, build, publish to npm
+npm run release:prepatch   # bump prepatch, build, publish to npm with --tag next
+npm run release:preminor   # bump preminor, build, publish to npm with --tag next
+npm run release:premajor   # bump premajor, build, publish to npm with --tag next
 ```
 
 ## Architecture
@@ -34,7 +37,7 @@ eazy-git is a globally-installed npm CLI tool for Git branch management. It uses
 - **i18n** (`src/i18n/`): `t(key, ...args)` for all user-facing strings. Locale files `es.js`/`en.js` export flat objects where values can be strings or functions for interpolation.
 - **Config** (`src/config/index.js`): `getConfig()`/`saveConfig()` persist to `~/.eazy-git/config.json`. Keys: `language`, `defaultBaseBranch`, `aiProvider`.
 - **Theme** (`src/ui/theme.js`): `ui.primary()`, `ui.secondary()`, `ui.muted()`, `ui.success()`, `ui.error()`, `ui.warning()` — chalk hex wrappers.
-- **Branch naming** (`src/actions/git/createBranchName.js`): prompts for type (`fix`/`improvement`/`feature`/`refactor`) and a JIRA ticket (format `ABC-1234`: 3 uppercase letters + dash + 4 digits). Result: `fix/ABC-1234`.
+- **Branch naming** (`src/actions/git/createBranchName.js`): prompts for type (`fix`/`improvement`/`feature`/`refactor`) and a JIRA ticket (format `ABC-1234`: 3 uppercase letters + dash + 4 digits). Result: `fix/ABC-1234`. In `addChangesToBranch.js` the ticket is optional — if omitted, branch is named after the type alone (e.g., `fix`) and the commit prefix omits the ticket reference.
 - **Upgrade** (`src/actions/config/upgrade.js`): checks npm registry for latest version and runs `npm install -g eazy-git@latest` if outdated.
 
 ### Directory Structure

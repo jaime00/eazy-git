@@ -60,10 +60,12 @@ const addChangesToBranch = async () => {
 
     const ticketReference = await text({
       message: ui.secondary(t('ticketId')),
-      placeholder: '---------',
-      validate: (v) => (!v?.trim() ? t('ticketRequired') : undefined)
+      placeholder: '---------'
     })
     handleUserCancellation(ticketReference)
+
+    const hasTicket =
+      ticketReference?.trim() && ticketReference?.trim() !== '---------'
 
     const ticketType = await select({
       message: ui.secondary(t('changeType')),
@@ -72,7 +74,9 @@ const addChangesToBranch = async () => {
     handleUserCancellation(ticketType)
 
     // --- Step 2: Create branch ---
-    const branchName = `${ticketType}/${ticketReference}`
+    const branchName = hasTicket
+      ? `${ticketType}/${ticketReference}`
+      : ticketType
     const branchExists = spawnSync('git', ['branch', '--list', branchName], {
       encoding: 'utf-8'
     }).stdout.trim()
@@ -116,7 +120,9 @@ const addChangesToBranch = async () => {
     // --- Step 4: AI commit suggestion ---
     const diff = execSync('git diff --cached', { encoding: 'utf-8' })
 
-    const commitPrefix = `${ticketType}(${ticketReference}): `
+    const commitPrefix = hasTicket
+      ? `${ticketType}(${ticketReference.trim()}): `
+      : `${ticketType}: `
 
     const commitMsg = await getAICommitMessage({ diff, commitPrefix })
 
