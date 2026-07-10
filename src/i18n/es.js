@@ -207,9 +207,9 @@ export default {
   goBack: 'Volver',
 
   // Reuse last commit
-  configReuseLastCommit: 'Sugerir ultimo commit',
-  reuseLastCommitEnabled: 'Sugerencia de ultimo commit: activada',
-  reuseLastCommitDisabled: 'Sugerencia de ultimo commit: desactivada',
+  configReuseLastCommit: 'Sugerir último commit utilizado',
+  reuseLastCommitEnabled: 'enabled',
+  reuseLastCommitDisabled: 'disabled',
   lastCommitFound: (msg) => `Ultimo commit: "${msg}"`,
   lastCommitAction: 'Que deseas hacer con este commit?',
   reuseCommit: 'Reutilizar tal cual',
