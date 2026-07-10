@@ -204,5 +204,15 @@ export default {
   configView: 'View current configuration',
   defaultBranchSet: (branch) => `Default base branch: ${branch}`,
   aiProviderSet: (provider) => `Default AI provider: ${provider}`,
-  goBack: 'Go back'
+  goBack: 'Go back',
+
+  // Reuse last commit
+  configReuseLastCommit: 'Suggest last commit',
+  reuseLastCommitEnabled: 'Last commit suggestion: enabled',
+  reuseLastCommitDisabled: 'Last commit suggestion: disabled',
+  lastCommitFound: (msg) => `Last commit: "${msg}"`,
+  lastCommitAction: 'What would you like to do with this commit?',
+  reuseCommit: 'Reuse as is',
+  modifyCommit: 'Modify',
+  newCommit: 'Generate a new one'
 }

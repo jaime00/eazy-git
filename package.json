@@ -39,6 +39,7 @@
     "back": "dist/git.js",
     "checkout": "dist/git.js",
     "log": "dist/git.js",
+    "build": "dist/run.js",
     "run": "dist/run.js",
     "runrun": "dist/run.js",
     "i": "dist/install.js"

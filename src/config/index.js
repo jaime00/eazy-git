@@ -8,7 +8,8 @@ const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json')
 const DEFAULT_CONFIG = {
   language: 'es',
   defaultBaseBranch: 'release',
-  aiProvider: 'claude'
+  aiProvider: 'claude',
+  reuseLastCommit: false
 }
 
 export function getConfig() {

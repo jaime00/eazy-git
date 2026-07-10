@@ -15,6 +15,7 @@ export default async function configure() {
       { value: 'language', label: t('configLanguage') },
       { value: 'defaultBranch', label: t('configDefaultBranch') },
       { value: 'aiProvider', label: t('configAIProvider') },
+      { value: 'reuseLastCommit', label: t('configReuseLastCommit') },
       { value: 'view', label: t('configView') }
     ]
   })
@@ -56,6 +57,24 @@ export default async function configure() {
     handleUserCancellation(provider)
     saveConfig({ aiProvider: provider })
     log.success(t('aiProviderSet', provider))
+    return configure()
+  }
+
+  if (action === 'reuseLastCommit') {
+    const current = getConfig().reuseLastCommit
+    const choice = await select({
+      message: ui.secondary(t('configReuseLastCommit')),
+      options: [
+        { value: true, label: t('reuseLastCommitEnabled') },
+        { value: false, label: t('reuseLastCommitDisabled') }
+      ],
+      initialValue: current
+    })
+    handleUserCancellation(choice)
+    saveConfig({ reuseLastCommit: choice })
+    log.success(
+      choice ? t('reuseLastCommitEnabled') : t('reuseLastCommitDisabled')
+    )
     return configure()
   }
 

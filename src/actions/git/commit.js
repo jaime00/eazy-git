@@ -1,6 +1,8 @@
 import { log, select, text } from '@clack/prompts'
 import { execSync, spawnSync } from 'child_process'
 
+import { getConfig } from '#config/index.js'
+
 import { getCommitTypes, t } from '#i18n/index.js'
 
 import { ui } from '#ui/theme.js'
@@ -9,6 +11,7 @@ import { getAICommitMessage } from '#utils/aiCommitSuggestion.js'
 import { commitWithHooks } from '#utils/commitWithHooks.js'
 import { getChangedFiles } from '#utils/gitFiles.js'
 import handleUserCancellation from '#utils/handleUserCancellation.js'
+import { getLastCommit, saveLastCommit } from '#utils/lastCommitStore.js'
 import { selectAndStageFiles } from '#utils/selectFiles.js'
 
 function quickCommit(args) {
@@ -33,6 +36,7 @@ function quickCommit(args) {
 }
 
 async function interactiveCommit() {
+  const config = getConfig()
   const commitTypes = getCommitTypes()
 
   const COMMIT_TYPES = Object.entries(commitTypes).map(([value, label]) => ({
@@ -54,7 +58,49 @@ async function interactiveCommit() {
     return
   }
 
-  // --- Step 1: Ticket ID (optional) ---
+  // --- Step 1: Check last commit suggestion ---
+  if (config.reuseLastCommit) {
+    const lastCommit = getLastCommit()
+    if (lastCommit) {
+      log.info(t('lastCommitFound', lastCommit))
+
+      const action = await select({
+        message: ui.secondary(t('lastCommitAction')),
+        options: [
+          { value: 'reuse', label: t('reuseCommit') },
+          { value: 'modify', label: t('modifyCommit') },
+          { value: 'new', label: t('newCommit') }
+        ]
+      })
+      handleUserCancellation(action)
+
+      if (action === 'reuse') {
+        const staged = await selectAndStageFiles()
+        if (!staged) return
+        const committed = await commitWithHooks(lastCommit)
+        if (committed) saveLastCommit(lastCommit)
+        return
+      }
+
+      if (action === 'modify') {
+        const staged = await selectAndStageFiles()
+        if (!staged) return
+        const modified = await text({
+          message: ui.secondary(t('writeCommitMsg')),
+          initialValue: lastCommit,
+          validate: (v) => (!v?.trim() ? t('commitMsgRequired') : undefined)
+        })
+        handleUserCancellation(modified)
+        const committed = await commitWithHooks(modified)
+        if (committed) saveLastCommit(modified)
+        return
+      }
+
+      // action === 'new': fall through to normal flow
+    }
+  }
+
+  // --- Step 2: Ticket ID (optional) ---
   const ticketReference = await text({
     message: ui.secondary(t('ticketId')),
     placeholder: '---------'
@@ -64,18 +110,18 @@ async function interactiveCommit() {
   const hasTicket =
     ticketReference?.trim() && ticketReference?.trim() !== '---------'
 
-  // --- Step 2: Change type ---
+  // --- Step 3: Change type ---
   const ticketType = await select({
     message: ui.secondary(t('changeType')),
     options: COMMIT_TYPES
   })
   handleUserCancellation(ticketType)
 
-  // --- Step 3: File selection ---
+  // --- Step 4: File selection ---
   const staged = await selectAndStageFiles()
   if (!staged) return
 
-  // --- Step 4: AI commit suggestion ---
+  // --- Step 5: AI commit suggestion ---
   const diff = execSync('git diff --cached', { encoding: 'utf-8' })
 
   const commitPrefix = hasTicket
@@ -84,8 +130,9 @@ async function interactiveCommit() {
 
   const commitMsg = await getAICommitMessage({ diff, commitPrefix })
 
-  // --- Step 5: Commit with hook handling ---
-  await commitWithHooks(commitMsg)
+  // --- Step 6: Commit with hook handling ---
+  const committed = await commitWithHooks(commitMsg)
+  if (committed) saveLastCommit(commitMsg)
 }
 
 export default async function commit(args) {

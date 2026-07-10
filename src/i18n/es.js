@@ -204,5 +204,15 @@ export default {
   configView: 'Ver configuracion actual',
   defaultBranchSet: (branch) => `Rama base por defecto: ${branch}`,
   aiProviderSet: (provider) => `Proveedor de IA por defecto: ${provider}`,
-  goBack: 'Volver'
+  goBack: 'Volver',
+
+  // Reuse last commit
+  configReuseLastCommit: 'Sugerir ultimo commit',
+  reuseLastCommitEnabled: 'Sugerencia de ultimo commit: activada',
+  reuseLastCommitDisabled: 'Sugerencia de ultimo commit: desactivada',
+  lastCommitFound: (msg) => `Ultimo commit: "${msg}"`,
+  lastCommitAction: 'Que deseas hacer con este commit?',
+  reuseCommit: 'Reutilizar tal cual',
+  modifyCommit: 'Modificar',
+  newCommit: 'Generar uno nuevo'
 }

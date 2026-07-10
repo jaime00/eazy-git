@@ -11,6 +11,7 @@ import { getAICommitMessage } from '#utils/aiCommitSuggestion.js'
 import { commitWithHooks } from '#utils/commitWithHooks.js'
 import { getChangedFiles } from '#utils/gitFiles.js'
 import handleUserCancellation from '#utils/handleUserCancellation.js'
+import { getLastCommit, saveLastCommit } from '#utils/lastCommitStore.js'
 import { selectAndStageFiles } from '#utils/selectFiles.js'
 
 const addChangesToBranch = async () => {
@@ -117,18 +118,55 @@ const addChangesToBranch = async () => {
     const staged = await selectAndStageFiles()
     if (!staged) return
 
-    // --- Step 4: AI commit suggestion ---
-    const diff = execSync('git diff --cached', { encoding: 'utf-8' })
-
     const commitPrefix = hasTicket
       ? `${ticketType}(${ticketReference.trim()}): `
       : `${ticketType}: `
 
-    const commitMsg = await getAICommitMessage({ diff, commitPrefix })
+    // --- Step 4: Check last commit suggestion ---
+    let commitMsg
+    if (config.reuseLastCommit) {
+      const lastCommit = getLastCommit()
+      if (lastCommit) {
+        log.info(t('lastCommitFound', lastCommit))
 
-    // --- Step 5: Commit with hook handling ---
-    const committed = await commitWithHooks(commitMsg)
-    if (!committed) return
+        const action = await select({
+          message: ui.secondary(t('lastCommitAction')),
+          options: [
+            { value: 'reuse', label: t('reuseCommit') },
+            { value: 'modify', label: t('modifyCommit') },
+            { value: 'new', label: t('newCommit') }
+          ]
+        })
+        handleUserCancellation(action)
+
+        if (action === 'reuse') {
+          const committed = await commitWithHooks(lastCommit)
+          if (!committed) return
+          saveLastCommit(lastCommit)
+          commitMsg = lastCommit
+        } else if (action === 'modify') {
+          const modified = await text({
+            message: ui.secondary(t('writeCommitMsg')),
+            initialValue: lastCommit,
+            validate: (v) => (!v?.trim() ? t('commitMsgRequired') : undefined)
+          })
+          handleUserCancellation(modified)
+          const committed = await commitWithHooks(modified)
+          if (!committed) return
+          saveLastCommit(modified)
+          commitMsg = modified
+        }
+      }
+    }
+
+    // --- Step 5: AI commit suggestion (if no reuse) ---
+    if (!commitMsg) {
+      const diff = execSync('git diff --cached', { encoding: 'utf-8' })
+      commitMsg = await getAICommitMessage({ diff, commitPrefix })
+      const committed = await commitWithHooks(commitMsg)
+      if (!committed) return
+      saveLastCommit(commitMsg)
+    }
 
     // --- Step 6: Optional push ---
     const doPush = await confirm({

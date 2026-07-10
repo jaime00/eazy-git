@@ -2,11 +2,12 @@ import { log } from '@clack/prompts'
 
 import { t } from '#i18n/index.js'
 
-import { run, runrun } from '#actions/run/commands.js'
+import { build, run, runrun } from '#actions/run/commands.js'
 
 const command = process.argv[1].split('/').pop()
 
 const commands = {
+  build,
   run,
   runrun
 }
