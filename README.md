@@ -173,6 +173,7 @@ eazy-git/
 │       ├── handleUserCancellation.js
 │       ├── hasGitInstalled.js
 │       ├── isEmpty.js
+│       ├── lastCommitStore.js
 │       ├── selectFiles.js
 │       └── validateTicketOfJIRA.js
 │
