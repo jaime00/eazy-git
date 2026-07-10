@@ -63,8 +63,9 @@ This opens an interactive menu with the following options:
 | `back`            | Switch back to the previously checked out branch                                           |
 | `checkout`        | Switch to a branch, create a new one with `-b <name>`, or return to the previous branch    |
 | `log`             | Display formatted commit history (passes args to `git log`, e.g. `log -p` / `log --patch`) |
-| `run`             | Start development server (`npm run dev`)                                                   |
-| `runrun`          | Clean development server restart (removes `.next` folder and runs `npm run dev`)           |
+| `build`           | Build the project (`npm run build` or `pnpm run build` — auto-detected)                    |
+| `run`             | Start development server (`npm run dev` or `pnpm run dev` — auto-detected)                 |
+| `runrun`          | Clean development server restart (removes `.next` folder and runs dev — auto-detected)     |
 | `i`               | Configure npm registry authentication (AWS CodeArtifact) and generate `.npmrc`             |
 | `eg config`       | Open configuration menu (language, default branch, AI provider)                            |
 | `eg upgrade`      | Upgrade eazy-git to the latest version from npm                                            |
@@ -97,6 +98,18 @@ When using the "Add Changes to Branch" flow or running `commit` without argument
 Configure your preferred provider via `eg config`.
 
 > **Note:** Both providers are invoked as local CLI binaries (`claude` and `opencode`). They must be installed and available in your `PATH` — no API key configuration within eazy-git is required.
+
+---
+
+## 🔁 Last Commit Reuse
+
+When `reuseLastCommit` is enabled in your config, running `commit` interactively will detect your previous commit message and offer three options:
+
+- **Reuse** — apply the same message to the new commit
+- **Modify** — edit the previous message before committing
+- **New** — start a fresh commit flow
+
+Enable it via `eg config`.
 
 ---
 
