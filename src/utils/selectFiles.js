@@ -1,5 +1,5 @@
 import { confirm, log, multiselect, note } from '@clack/prompts'
-import { execSync, spawnSync } from 'child_process'
+import { spawnSync } from 'child_process'
 
 import { t } from '#i18n/index.js'
 
@@ -31,12 +31,21 @@ export async function selectAndStageFiles() {
       return { value: line, label: filename, hint: statusLabel }
     })
 
+    const preSelected = currentFiles.filter((line) => {
+      const indexStatus = line[0]
+      const worktreeStatus = line[1]
+      return (
+        indexStatus !== ' ' && indexStatus !== '?' && worktreeStatus === ' '
+      )
+    })
+
     const selectedLines = await multiselect({
       message: ui.secondary(t('selectFiles')),
       options: [
         { value: SELECT_ALL, label: ui.primary(t('selectAllFiles')) },
         ...fileOptions
       ],
+      initialValues: preSelected,
       required: true
     })
     handleUserCancellation(selectedLines)
@@ -57,10 +66,8 @@ export async function selectAndStageFiles() {
       }
     }
 
-    const stagedStatus = execSync('git status --short', {
-      encoding: 'utf-8'
-    }).trim()
-    note(stagedStatus, t('stagedFiles'))
+    const stagedNames = finalSelection.map(extractFilename).join('\n')
+    note(stagedNames, t('stagedFiles'))
 
     const ok = await confirm({
       message: t('stagedCorrect')

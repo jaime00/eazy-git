@@ -4,6 +4,7 @@ import { t } from '#i18n/index.js'
 
 import hasGitInstalled from '#utils/hasGitInstalled.js'
 
+import add from '#actions/git/add.js'
 import checkout from '#actions/git/checkout.js'
 import commit from '#actions/git/commit.js'
 import diff from '#actions/git/diff.js'
@@ -19,6 +20,7 @@ const gitCommand = process.argv[1].split('/').pop()
 const args = process.argv.slice(2)
 
 const commands = {
+  add: () => add(args),
   pull,
   push: () => push(args),
   removelast,

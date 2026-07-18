@@ -31,6 +31,7 @@
   "bin": {
     "eazy-git": "dist/index.js",
     "eg": "dist/index.js",
+    "add": "dist/git.js",
     "pull": "dist/git.js",
     "push": "dist/git.js",
     "removelast": "dist/git.js",

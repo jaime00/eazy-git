@@ -62,6 +62,7 @@ This opens an interactive menu with the following options:
 | Command           | Description                                                                                |
 | ----------------- | ------------------------------------------------------------------------------------------ |
 | `eazy-git`, `eg`  | Launch the interactive CLI to create and manage Git branches                               |
+| `add`             | Stage files interactively (no args) or pass filenames directly (e.g. `add src/foo.js`)     |
 | `pull`            | Pull latest changes from remote repository (`git pull origin HEAD`)                        |
 | `push`            | Push local changes to remote repository (`git push origin HEAD`)                           |
 | `removelast`      | Undo last commit while preserving changes in working directory (shows commit details)      |
@@ -132,6 +133,7 @@ eazy-git/
 │   │   │   ├── setupDelta.js
 │   │   │   └── upgrade.js
 │   │   ├── git/
+│   │   │   ├── add.js
 │   │   │   ├── addChangesToBranch.js
 │   │   │   ├── checkout.js
 │   │   │   ├── commit.js

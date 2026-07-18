@@ -152,6 +152,9 @@ export default {
   removeLastError: (msg) => `Error: ${msg}`,
   logError: (msg) => `Error: ${msg}`,
   diffError: (msg) => `Error: ${msg}`,
+  addError: 'Error adding files',
+  addSuccess: 'Files added successfully',
+  selectFilesToStage: 'Which files do you want to include in the stage?',
 
   // Install
   settingUpConfig: 'Setting up your configuration',

@@ -28,7 +28,7 @@ eazy-git is a globally-installed npm CLI tool for Git branch management. It uses
 ### Entry Points
 
 - **`index.js`** → `dist/index.js` — Main interactive menu (`eg`, `eazy-git`). Options: Add Changes to Branch, Create Original Branch, Create Temporal Branch, Configure.
-- **`git.js`** → `dist/git.js` — Quick git commands (`pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`, `diff`). Routes via `process.argv[1]` filename matching. `commit` without args launches an interactive flow (file selection, AI suggestion, hook handling); with args it does a quick `git add . && git commit`. `diff` forwards all args to `git diff` with `stdio: 'inherit'`.
+- **`git.js`** → `dist/git.js` — Quick git commands (`add`, `pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`, `diff`). Routes via `process.argv[1]` filename matching. `add` without args opens an interactive multiselect picker (pre-selects already-staged files); with args passes them directly to `git add`. `commit` without args launches an interactive flow (file selection, AI suggestion, hook handling); with args it does a quick `git add . && git commit`. `diff` forwards all args to `git diff` with `stdio: 'inherit'`.
 - **`run.js`** → `dist/run.js` — npm/pnpm script runners (`build`, `run`, `runrun`). Auto-detects pnpm via lockfile presence (`pnpm-lock.yaml`, `pnpm-workspace.yaml`, `.pnpmfile.cjs`).
 - **`install.js`** → `dist/install.js` — npm registry config (`i`).
 
