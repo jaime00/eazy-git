@@ -53,7 +53,7 @@ This opens an interactive menu with the following options:
 - **Add Changes to Branch** — Stage files, generate a commit (with optional AI-suggested messages), and push. JIRA ticket is optional — if omitted, the branch is named after the commit type only (e.g., `fix`)
 - **Create Original Branch** — Create a new branch from a base branch following naming conventions
 - **Create Temporal Branch** — Create and merge a temporary branch into develop or release
-- **Configure** — Change language, default base branch, AI provider, reuse last commit setting, or view current configuration
+- **Configure** — Change language, default base branch, AI provider, reuse last commit setting, enable pretty diffs (delta), or view current configuration
 
 ---
 
@@ -70,6 +70,7 @@ This opens an interactive menu with the following options:
 | `back`            | Switch back to the previously checked out branch                                           |
 | `checkout`        | Switch to a branch or create a new one with `-b <name>`                                    |
 | `log`             | Display formatted commit history (passes args to `git log`, e.g. `log -p` / `log --patch`) |
+| `diff`            | Show changes in working directory (passes all args to `git diff`)                          |
 | `build`           | Build the project (`npm run build` or `pnpm run build` — auto-detected)                    |
 | `run`             | Start development server (`npm run dev` or `pnpm run dev` — auto-detected)                 |
 | `runrun`          | Clean development server restart (removes `.next` folder and runs dev — auto-detected)     |
@@ -128,6 +129,7 @@ eazy-git/
 │   ├── actions/
 │   │   ├── config/
 │   │   │   ├── configure.js
+│   │   │   ├── setupDelta.js
 │   │   │   └── upgrade.js
 │   │   ├── git/
 │   │   │   ├── addChangesToBranch.js
@@ -136,6 +138,7 @@ eazy-git/
 │   │   │   ├── createBranchName.js
 │   │   │   ├── createOriginalBranch.js
 │   │   │   ├── createTemporalBranch.js
+│   │   │   ├── diff.js
 │   │   │   ├── log.js
 │   │   │   ├── mergewith.js
 │   │   │   ├── pull.js

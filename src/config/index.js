@@ -9,7 +9,8 @@ const DEFAULT_CONFIG = {
   language: 'es',
   defaultBaseBranch: 'release',
   aiProvider: 'claude',
-  reuseLastCommit: false
+  reuseLastCommit: false,
+  prettyDiff: false
 }
 
 export function getConfig() {

@@ -28,17 +28,18 @@ eazy-git is a globally-installed npm CLI tool for Git branch management. It uses
 ### Entry Points
 
 - **`index.js`** → `dist/index.js` — Main interactive menu (`eg`, `eazy-git`). Options: Add Changes to Branch, Create Original Branch, Create Temporal Branch, Configure.
-- **`git.js`** → `dist/git.js` — Quick git commands (`pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`). Routes via `process.argv[1]` filename matching. `commit` without args launches an interactive flow (file selection, AI suggestion, hook handling); with args it does a quick `git add . && git commit`.
+- **`git.js`** → `dist/git.js` — Quick git commands (`pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`, `diff`). Routes via `process.argv[1]` filename matching. `commit` without args launches an interactive flow (file selection, AI suggestion, hook handling); with args it does a quick `git add . && git commit`. `diff` forwards all args to `git diff` with `stdio: 'inherit'`.
 - **`run.js`** → `dist/run.js` — npm/pnpm script runners (`build`, `run`, `runrun`). Auto-detects pnpm via lockfile presence (`pnpm-lock.yaml`, `pnpm-workspace.yaml`, `.pnpmfile.cjs`).
 - **`install.js`** → `dist/install.js` — npm registry config (`i`).
 
 ### Core Systems
 
 - **i18n** (`src/i18n/`): `t(key, ...args)` for all user-facing strings. Locale files `es.js`/`en.js` export flat objects where values can be strings or functions for interpolation.
-- **Config** (`src/config/index.js`): `getConfig()`/`saveConfig()` persist to `~/.eazy-git/config.json`. Keys: `language`, `defaultBaseBranch`, `aiProvider`, `reuseLastCommit`.
+- **Config** (`src/config/index.js`): `getConfig()`/`saveConfig()` persist to `~/.eazy-git/config.json`. Keys: `language`, `defaultBaseBranch`, `aiProvider`, `reuseLastCommit`, `prettyDiff`.
 - **Theme** (`src/ui/theme.js`): `ui.primary()`, `ui.secondary()`, `ui.muted()`, `ui.success()`, `ui.error()`, `ui.warning()` — chalk hex wrappers.
 - **Branch naming** (`src/actions/git/createBranchName.js`): prompts for type (`fix`/`improvement`/`feature`/`refactor`) and a JIRA ticket (format `ABC-1234`: 3 uppercase letters + dash + 4 digits). Result: `fix/ABC-1234`. In `addChangesToBranch.js` the ticket is optional — if omitted, branch is named after the type alone (e.g., `fix`) and the commit prefix omits the ticket reference.
 - **Upgrade** (`src/actions/config/upgrade.js`): checks npm registry for latest version and runs `npm install -g eazy-git@latest` if outdated.
+- **Delta** (`src/actions/config/setupDelta.js`): `enableDelta()` installs `git-delta` via Homebrew if missing and sets global git config for side-by-side diffs. `disableDelta()` removes those git config entries. Toggled via the `prettyDiff` configure option.
 
 ### Directory Structure
 

@@ -151,6 +151,7 @@ export default {
   removedCommitDetail: 'Detalle del commit',
   removeLastError: (msg) => `Error: ${msg}`,
   logError: (msg) => `Error: ${msg}`,
+  diffError: (msg) => `Error: ${msg}`,
 
   // Install
   settingUpConfig: 'Configurando tu entorno',
@@ -205,6 +206,15 @@ export default {
   defaultBranchSet: (branch) => `Rama base por defecto: ${branch}`,
   aiProviderSet: (provider) => `Proveedor de IA por defecto: ${provider}`,
   goBack: 'Volver',
+
+  // Pretty diff (delta)
+  configPrettyDiff: 'Pretty diff (delta)',
+  deltaInstalling: 'Instalando delta...',
+  deltaInstalled: 'delta instalado correctamente',
+  deltaInstallError:
+    'No se pudo instalar delta. Instalalo manualmente: brew install git-delta',
+  deltaConfigured: 'Pretty diff habilitado (delta configurado en git)',
+  deltaRemoved: 'Pretty diff deshabilitado (configuracion de delta removida)',
 
   // Reuse last commit
   configReuseLastCommit: 'Sugerir último commit utilizado',

@@ -8,6 +8,8 @@ import { ui } from '#ui/theme.js'
 
 import handleUserCancellation from '#utils/handleUserCancellation.js'
 
+import { disableDelta, enableDelta } from '#actions/config/setupDelta.js'
+
 export default async function configure() {
   const action = await select({
     message: ui.secondary(t('configMenu')),
@@ -16,6 +18,7 @@ export default async function configure() {
       { value: 'defaultBranch', label: t('configDefaultBranch') },
       { value: 'aiProvider', label: t('configAIProvider') },
       { value: 'reuseLastCommit', label: t('configReuseLastCommit') },
+      { value: 'prettyDiff', label: t('configPrettyDiff') },
       { value: 'view', label: t('configView') }
     ]
   })
@@ -75,6 +78,29 @@ export default async function configure() {
     log.success(
       choice ? t('reuseLastCommitEnabled') : t('reuseLastCommitDisabled')
     )
+    return configure()
+  }
+
+  if (action === 'prettyDiff') {
+    const current = getConfig().prettyDiff
+    const choice = await select({
+      message: ui.secondary(t('configPrettyDiff')),
+      options: [
+        { value: true, label: t('reuseLastCommitEnabled') },
+        { value: false, label: t('reuseLastCommitDisabled') }
+      ],
+      initialValue: current
+    })
+    handleUserCancellation(choice)
+
+    if (choice && !current) {
+      const success = enableDelta()
+      if (success) saveConfig({ prettyDiff: true })
+    } else if (!choice && current) {
+      disableDelta()
+      saveConfig({ prettyDiff: false })
+    }
+
     return configure()
   }
 

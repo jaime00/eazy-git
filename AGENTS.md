@@ -12,12 +12,12 @@ Build is required before any `npm link` or `npm publish`. Source files import fr
 
 ## Multi-binary architecture (4 entry points → many aliases)
 
-| Entry        | `bin` aliases                                                                  | Behavior                                                                        |
-| ------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| `index.js`   | `eazy-git`, `eg`, `asd`                                                        | Interactive menu: Add Changes / Create Original Branch / Create Temporal Branch |
-| `git.js`     | `pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log` | Each alias = one git subcommand; dispatches on `process.argv[1]`                |
-| `run.js`     | `run`, `runrun`                                                                | `run` = `npm run dev`; `runrun` = `rm -rf .next; npm run dev`                   |
-| `install.js` | `i`                                                                            | Interactive npm registry/AWS CodeArtifact auth setup; generates `~/.npmrc`      |
+| Entry        | `bin` aliases                                                                          | Behavior                                                                                 |
+| ------------ | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `index.js`   | `eazy-git`, `eg`, `asd`                                                                | Interactive menu: Add Changes / Create Original Branch / Create Temporal Branch          |
+| `git.js`     | `pull`, `push`, `removelast`, `mergewith`, `commit`, `back`, `checkout`, `log`, `diff` | Each alias = one git subcommand; dispatches on `process.argv[1]`                         |
+| `run.js`     | `run`, `runrun`, `build`                                                               | `run` = `npm run dev`; `runrun` = `rm -rf .next; npm run dev`; `build` = `npm run build` |
+| `install.js` | `i`                                                                                    | Interactive npm registry/AWS CodeArtifact auth setup; generates `~/.npmrc`               |
 
 Subcommand routing is not argument-based — the binary name itself (the last segment of `argv[1]`) selects the handler. Examples:
 
@@ -26,21 +26,65 @@ Subcommand routing is not argument-based — the binary name itself (the last se
 - `checkout <branch>` → `git checkout <branch>`; `back` → `git checkout -`
 - `mergewith develop` → merges current branch with `origin/develop`
 - `commit "msg"` → `git add . && git commit -m "msg"`
+- `diff` → forwards all args to `git diff` with `stdio: 'inherit'`
 
 No tests, no linter, no typecheck. `"type": "module"` (ESM), `node >=14.0.0`.
 
-## Project roots
+## Import aliases (critical)
 
-- `index.js` — interactive entry (calls `hasGitInstalled()` first)
-- `src/actions/git/addChangesToBranch.js` — main "add changes" flow (uses `@clack/prompts`)
-- `src/actions/git/createOriginalBranch.js` / `createTemporalBranch.js` — branch creation with JIRA ticket prompts
+The project uses Node.js subpath imports (`#` prefix) defined in `package.json` `imports` and esbuild `alias` in `build.js`. IDE support via `jsconfig.json`.
+
+| Alias        | Path            |
+| ------------ | --------------- |
+| `#config/*`  | `src/config/*`  |
+| `#i18n/*`    | `src/i18n/*`    |
+| `#ui/*`      | `src/ui/*`      |
+| `#utils/*`   | `src/utils/*`   |
+| `#actions/*` | `src/actions/*` |
+| `#getters/*` | `src/getters/*` |
+
+Use `#`-prefixed aliases for cross-directory imports. Keep relative `./` imports only within the same directory. The pre-commit hook **blocks** cross-directory relative imports — it will reject `from '../foo'` or `from './subdir/bar'` in `src/` files.
 
 ## Key patterns & quirks
 
 - **`@clack/prompts`** is the primary UX toolkit: `select`, `intro`, `outro`, `cancel`, `log.step`, `log.success`, `log.error`.
-- **JIRA integration**: branch naming prompts expect a JIRA ticket (validated by `validateTicketOfJIRA.js`, extracted by `getTicketOfJIRA.js`).
+- **`chalk`** for colors. Theme helpers at `src/ui/theme.js` (`ui.primary()`, `ui.secondary()`, `ui.muted()`, `ui.success()`, `ui.error()`, `ui.warning()`).
+- **i18n**: `t(key, ...args)` from `#i18n/index.js` for all user-facing strings. Add keys to both `src/i18n/es.js` and `src/i18n/en.js`.
+- **Config**: `getConfig()`/`saveConfig()` persist to `~/.eazy-git/config.json`. Keys: `language`, `defaultBaseBranch`, `aiProvider`, `reuseLastCommit`, `prettyDiff`.
+- **JIRA integration**: branch naming prompts expect a ticket matching `ABC-1234` (validated by `validateTicketOfJIRA.js`). In `addChangesToBranch.js` the ticket is optional.
 - **`hasGitInstalled()`** guard is called at the top of `index.js` and `git.js`; exits with error if git is missing.
 - **`runrun`** deletes `.next` (Next.js cache) before running dev server.
 - **Install system** manages AWS CodeArtifact `~/.npmrc` credentials; reads/writes `~/config.js`.
 - **`config.js`** at repo root is gitignored (generated by install flow).
 - **`.npmrc`** at repo root is gitignored (contains auth tokens).
+- **`run.js`** auto-detects pnpm via lockfile presence (`pnpm-lock.yaml`, `pnpm-workspace.yaml`, `.pnpmfile.cjs`).
+
+## Conventions
+
+- All user-facing strings must use `t()` — never hardcode strings
+- All prompts use `ui.secondary()` for the question color
+- Git commands use `spawnSync` with array args (never string concatenation)
+- Errors use `log.error()` from `@clack/prompts`, never `console.error`
+- User cancellation: call `handleUserCancellation()` after every interactive prompt
+- Entry-point async flows: wrap in try/catch with `log.error(err.message)` and `process.exit(1)`
+- Config view must mask sensitive values (keys containing "key", "token", "secret") showing only last 4 chars
+
+## Formatting
+
+Prettier runs automatically on staged files via Husky pre-commit (no manual run needed). Config in `.prettierrc`: no semicolons, single quotes, no trailing commas, 80 char width, with `@trivago/prettier-plugin-sort-imports`.
+
+Import order enforced by the pre-commit hook and prettier: third-party → `#config` → `#i18n` → `#ui` → `#utils` → `#actions` → `#getters` → relative.
+
+## Release
+
+```sh
+npm run release:patch      # bump patch, build, publish
+npm run release:minor      # bump minor, build, publish
+npm run release:major      # bump major, build, publish
+npm run release:prepatch   # bump prepatch, build, publish --tag next
+```
+
+## Commits
+
+- NEVER include references to Claude, Claude Code, AI models, or "Co-authored-by" from any model/AI in commit messages, trailers, or metadata.
+- Commits must appear as if written entirely by the human user.

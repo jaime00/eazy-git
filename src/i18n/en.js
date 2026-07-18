@@ -151,6 +151,7 @@ export default {
   removedCommitDetail: 'Commit detail',
   removeLastError: (msg) => `Error: ${msg}`,
   logError: (msg) => `Error: ${msg}`,
+  diffError: (msg) => `Error: ${msg}`,
 
   // Install
   settingUpConfig: 'Setting up your configuration',
@@ -205,6 +206,15 @@ export default {
   defaultBranchSet: (branch) => `Default base branch: ${branch}`,
   aiProviderSet: (provider) => `Default AI provider: ${provider}`,
   goBack: 'Go back',
+
+  // Pretty diff (delta)
+  configPrettyDiff: 'Pretty diff (delta)',
+  deltaInstalling: 'Installing delta...',
+  deltaInstalled: 'delta installed successfully',
+  deltaInstallError:
+    'Could not install delta. Install it manually: brew install git-delta',
+  deltaConfigured: 'Pretty diff enabled (delta configured in git)',
+  deltaRemoved: 'Pretty diff disabled (delta config removed)',
 
   // Reuse last commit
   configReuseLastCommit: 'Suggest last used commit',

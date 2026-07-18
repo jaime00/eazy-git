@@ -6,6 +6,7 @@ import hasGitInstalled from '#utils/hasGitInstalled.js'
 
 import checkout from '#actions/git/checkout.js'
 import commit from '#actions/git/commit.js'
+import diff from '#actions/git/diff.js'
 import consolelog from '#actions/git/log.js'
 import mergewith from '#actions/git/mergewith.js'
 import pull from '#actions/git/pull.js'
@@ -25,7 +26,8 @@ const commands = {
   commit: () => commit(args),
   checkout: () => checkout(args),
   back: () => checkout('-'),
-  log: () => consolelog(args)
+  log: () => consolelog(args),
+  diff: () => diff(args)
 }
 
 async function main() {
