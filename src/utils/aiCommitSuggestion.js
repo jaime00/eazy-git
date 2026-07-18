@@ -36,8 +36,8 @@ ${diff}`
   handleUserCancellation(aiChoice)
 
   const aiConfig = {
-    claude: { binary: 'claude', args: ['-p', prompt], label: 'Claude' },
-    opencode: { binary: 'opencode', args: ['run', prompt], label: 'Opencode' }
+    claude: { binary: 'claude', args: ['-p', '-'], label: 'Claude' },
+    opencode: { binary: 'opencode', args: ['run', '-'], label: 'Opencode' }
   }
 
   const { binary, args, label } = aiConfig[aiChoice]
@@ -48,8 +48,10 @@ ${diff}`
     let stdout = ''
     let stderr = ''
     const proc = spawn(binary, args, {
-      stdio: ['ignore', 'pipe', 'pipe']
+      stdio: ['pipe', 'pipe', 'pipe']
     })
+    proc.stdin.write(prompt)
+    proc.stdin.end()
     proc.stdout.on('data', (chunk) => {
       stdout += chunk
     })

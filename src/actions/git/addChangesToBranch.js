@@ -161,7 +161,10 @@ const addChangesToBranch = async () => {
 
     // --- Step 5: AI commit suggestion (if no reuse) ---
     if (!commitMsg) {
-      const diff = execSync('git diff --cached', { encoding: 'utf-8' })
+      const diff = execSync('git diff --cached', {
+        encoding: 'utf-8',
+        maxBuffer: Infinity
+      })
       commitMsg = await getAICommitMessage({ diff, commitPrefix })
       const committed = await commitWithHooks(commitMsg)
       if (!committed) return

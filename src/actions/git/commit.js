@@ -122,7 +122,10 @@ async function interactiveCommit() {
   if (!staged) return
 
   // --- Step 5: AI commit suggestion ---
-  const diff = execSync('git diff --cached', { encoding: 'utf-8' })
+  const diff = execSync('git diff --cached', {
+    encoding: 'utf-8',
+    maxBuffer: Infinity
+  })
 
   const commitPrefix = hasTicket
     ? `${ticketType}(${ticketReference.trim()}): `
